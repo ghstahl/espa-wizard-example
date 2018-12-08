@@ -18,15 +18,24 @@ class PageTwoWizardPage extends WizardPage {
 
     onNext() {
         console.log("onNext");
-        return true;
+        var promise = new Promise(function (resolve, reject) {
+            resolve(true);
+        });
+        return promise;
     }
     onBack() {
         console.log("onBack");
-        return true;
+        var promise = new Promise(function (resolve, reject) {
+            resolve(true);
+        });
+        return promise;
     }
     onCancel() {
         console.log("onCancel");
-        return true;
+        var promise = new Promise(function (resolve, reject) {
+            resolve(true);
+        });
+        return promise;
     }
 
 }

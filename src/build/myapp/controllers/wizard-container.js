@@ -94,7 +94,6 @@ function _displayView() {
     document.getElementById('main-container').style.display = 'block';
 
     bindEvents({
-        'click #submitActivationKey': _onSumbitActivationKey,
         'click #go-to-bar': _onGoToBar,
         'click #back-wizard': _onBackWizard,
         'click #next-wizard': _onNextWizard,
@@ -111,24 +110,17 @@ function _displayView() {
     ESPA.navigate('page-access-token');
 }
 
-function _onSumbitActivationKey(e) {
-    e.preventDefault();
-    var state = getState();
-    var dd = document.getElementById('activationKey');
-    state.activationKey = dd.value;
-    dd = document.getElementById('activationKeyEcho');
-    dd.value = state.activationKey;
-}
-
 function _onBackWizard(e) {
     e.preventDefault();
 
     console.log("_onBackWizard");
-    var ok = wizardEngine.OnBackWizardPage();
-    if (ok) {
-        var state = wizardEngine.getCurrentState();
-        ESPA.navigate(state.backPage);
-    }
+    wizardEngine.OnBackWizardPage().then((result) => {
+        if (result) {
+            var state = wizardEngine.getCurrentState();
+            ESPA.navigate(state.backPage);
+        }
+
+    });
 }
 
 function _onNextWizard(e) {
@@ -140,7 +132,7 @@ function _onNextWizard(e) {
             var state = wizardEngine.getCurrentState();
             ESPA.navigate(state.nextPage);
         }
-             
+
     });
 }
 
