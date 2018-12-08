@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Jumbotron Template for Bootstrap</title>
+
+  <style>
+    #loader {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 1;
+      border: 5px solid #f3f3f3;
+      -webkit-animation: spin 1s linear infinite;
+      animation: spin 1s linear infinite;
+      border-top: 5px solid #555;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+    }
+
+    @-webkit-keyframes spin {
+      0% {
+        -webkit-transform: rotate(0deg);
+      }
+
+      100% {
+        -webkit-transform: rotate(360deg);
+      }
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    #main-container {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="loader"></div>
+
+  <div id="main-container">
+    <main role="main">
+      <div id="main-content"></div>
+
+    </main>
+  </div>
+
+  <!-- FOR DEV -->
+  <script src="/jspm_packages/system.js"></script>
+  <script src="/jspm.config.js"></script>
+  <script>
+    System.import('src/build/myapp/main.js');
+  </script>
+  <!-- FOR DEV -->
+
+  <!-- FOR PROD -->
+  <!--<script src="/dist/espa/myapp/1.0.0/main.min.js"></script>-->
+  <!-- FOR PROD -->
+
+</body>
+
+</html>
