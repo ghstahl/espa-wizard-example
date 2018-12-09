@@ -107,7 +107,7 @@ function _displayView() {
         next: false,
         cancel: true
     });
-    ESPA.navigate('page-access-token');
+    ESPA.navigate('page-id-token');
 }
 
 function _onBackWizard(e) {

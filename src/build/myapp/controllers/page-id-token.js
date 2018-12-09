@@ -13,29 +13,45 @@ import {
     wizardEngine
 } from '../services/wizard-services.js';
 import fetchService from '../services/fetch-service.js';
-import tpl from '../views/page-access-token.html';
+import tpl from '../views/page-id-token.html';
 
-class PageAccessTokenWizardPage extends WizardPage {
+class PageIdTokenWizardPage extends WizardPage {
 
     onNext() {
         console.log("onNext");
-        var el = document.getElementById('access_token');
+        var el = document.getElementById('id_token');
         var state = getState();
-        state.access_token = el.value;
+        state.id_token = el.value;
         var promise = new Promise(function (resolve, reject) {
+
+            let details = {
+                'id_token': state.id_token
+            };
+
+            let formBody = [];
+            for (let property in details) {
+                let encodedKey = encodeURIComponent(property);
+                let encodedValue = encodeURIComponent(details[property]);
+                formBody.push(encodedKey + "=" + encodedValue);
+            }
+            formBody = formBody.join("&");
+
             // do a thing, possibly async, then…
-            fetchService.fetch('https://wizardappapi.azurewebsites.net/api/Identity/closed', {
+            fetchService.fetch('https://wizardappapi.azurewebsites.net/api/Identity/bind', {
+                method: "POST",
                 headers: {
-                    "Authorization": "Bearer " + state.access_token,
-                    "x-authScheme": "One"
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Accept": "application/json"
                 },
+                body: formBody
             }).then((result) => {
                 if (result.response.status != 200) {
-                    var el = document.getElementById('access_token_error');
-                    el.innerHTML = "access_token has been rejected!";
+                    var el = document.getElementById('id_token_error');
+                    el.innerHTML = "id_token has been rejected!";
                     resolve(false);
                 } else {
-                    state.identity = result.json;
+                    var json = result.json;
+                    state.access_token = json.access_token;
                     resolve(true);
                 }
             }).catch(function (error) {
@@ -82,7 +98,7 @@ const factory = ((injected) => {
 });
 
 function init() {
-    ESPA.registerRoute('page-access-token', _registerRouteCallback);
+    ESPA.registerRoute('page-id-token', _registerRouteCallback);
 }
 
 function _registerRouteCallback(data) {
@@ -93,9 +109,9 @@ function _registerRouteCallback(data) {
         ])
         .then((results) => {
             viewData = Object.assign(viewData, serviceData);
-            viewData.access_token = state.access_token;
+            viewData.id_token = state.id_token;
             viewData.data = {
-                bar: "Bar This"
+                bar: "id_token"
             }
             _displayView();
         })
@@ -115,19 +131,21 @@ function _displayView() {
     bindEvents({});
     var state = getState();
     if (state.access_token) {
-        var el = document.getElementById('access_token');
-        el.value = state.access_token;
+        var el = document.getElementById('id_token');
+        el.value = state.id_token;
     }
     wizardEngine.setCurrentState({
-        currentPage: new PageAccessTokenWizardPage(),
-        nextPage: "page-one",
-        backPage: "page-id-token",
-        back: true,
+        currentPage: new PageIdTokenWizardPage(),
+        nextPage: "page-access-token",
+        backPage: null,
+        back: false,
         next: true,
         cancel: true
     });
 
 }
+
+
 
 export {
     factory,

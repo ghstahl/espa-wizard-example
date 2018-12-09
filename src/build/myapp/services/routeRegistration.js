@@ -14,8 +14,12 @@ import {
     factory as factoryPagetwo
 } from '../controllers/page-two.js';
 import {
-    factory as factoryPageAccessCode
+    factory as factoryPageAccessToken
 } from '../controllers/page-access-token.js';
+import {
+    factory as factoryPageIdToken
+} from '../controllers/page-id-token.js';
+
 export function registerRoutes() {
     //your routes here
     factoryWizardContainer();
@@ -23,7 +27,8 @@ export function registerRoutes() {
     factoryBar();
     factoryPageOne();
     factoryPagetwo();
-    factoryPageAccessCode();
+    factoryPageAccessToken();
+    factoryPageIdToken();
     //reset the default route
     ESPA.navigate('/');
 }
