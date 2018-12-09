@@ -14,53 +14,26 @@ import {
     wizardEngine
 } from '../services/wizard-services.js';
 
+import {
+    promisesHelpers
+} from '../helpers/promises.js';
 import tpl from '../views/page-one.html';
 
 class PageOneWizardPage extends WizardPage {
 
     onNext() {
         console.log("onNext");
-        var promise = new Promise(function (resolve, reject) {
-            resolve(true);
-        });
-        return promise;
+        return promisesHelpers.valueAsPromise(true);
     }
     onBack() {
         console.log("onBack");
-        var promise = new Promise(function (resolve, reject) {
-            resolve(true);
-        });
-        return promise;
+        return promisesHelpers.valueAsPromise(true);
     }
     onCancel() {
         console.log("onCancel");
-        var promise = new Promise(function (resolve, reject) {
-            resolve(true);
-        });
-        return promise;
+        return promisesHelpers.valueAsPromise(true);
     }
 
-}
-
-class SimpleDate {
-    constructor(year, month, day) {
-        // Check that (year, month, day) is a valid date
-        // ...
-
-        // If it is, use it to initialize "this" date
-        this._year = year;
-        this._month = month;
-        this._day = day;
-    }
-
-    addDays(nDays) {
-        // Increase "this" date by n days
-        // ...
-    }
-
-    getDay() {
-        return this._day;
-    }
 }
 
 let viewData = null;

@@ -12,30 +12,24 @@ import {
     WizardPage,
     wizardEngine
 } from '../services/wizard-services.js';
+import {
+    promisesHelpers
+} from '../helpers/promises.js';
 import tpl from '../views/page-two.html';
 
 class PageTwoWizardPage extends WizardPage {
 
     onNext() {
         console.log("onNext");
-        var promise = new Promise(function (resolve, reject) {
-            resolve(true);
-        });
-        return promise;
+        return promisesHelpers.valueAsPromise(true);
     }
     onBack() {
         console.log("onBack");
-        var promise = new Promise(function (resolve, reject) {
-            resolve(true);
-        });
-        return promise;
+        return promisesHelpers.valueAsPromise(true);
     }
     onCancel() {
         console.log("onCancel");
-        var promise = new Promise(function (resolve, reject) {
-            resolve(true);
-        });
-        return promise;
+        return promisesHelpers.valueAsPromise(true);
     }
 
 }

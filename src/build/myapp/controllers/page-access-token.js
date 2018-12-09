@@ -31,6 +31,8 @@ class PageAccessTokenWizardPage extends WizardPage {
                 },
             }).then((result) => {
                 if (result.response.status != 200) {
+                    var el = document.getElementById('access_token_error');
+                    el.innerHTML = "access_token has been rejected!";
                     resolve(false);
                 } else {
                     state.identity = result.json;
