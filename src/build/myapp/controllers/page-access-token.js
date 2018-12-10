@@ -52,7 +52,7 @@ const wizardPage = factoryWizardPage({
                     var el = document.getElementById('access_token_error');
                     el.innerHTML = "entitlementResult!";
                 } else {
-                    state.entitlements = entitlementResult.json;
+                    state.entitlements = entitlementResult.json.entitlements;
                 }
                 return success;
             })

@@ -8,5 +8,18 @@
 
     </p>
     <p id="activationKeyEcho"></p>
+    <ul id="my-list">
+        <% for ( var i = 0; i < entitlements.length; i++ ) { 
+                var entitlement = entitlements[i];%>
+        <li>
+            <%= entitlement.name %>
+        </li>
+
+        <% } %>
+
+
+    </ul>
+
+
 
 </div>

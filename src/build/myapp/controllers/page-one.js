@@ -71,8 +71,10 @@ function _registerRouteCallback(data) {
                     viewData.user = entry.value;
 
                 }
+
                 console.log(entry);
             });
+            viewData.entitlements = state.entitlements;
             _displayView();
         })
         .catch(e => {
