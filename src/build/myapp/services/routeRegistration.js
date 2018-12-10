@@ -2,6 +2,9 @@ import {
     factory as factoryWizardContainer
 } from '../controllers/wizard-container.js';
 import {
+    factory as factoryWizardContainer2
+} from '../controllers/wizard-container2.js';
+import {
     factory as factoryFoo
 } from '../controllers/foo.js';
 import {
@@ -19,16 +22,21 @@ import {
 import {
     factory as factoryPageIdToken
 } from '../controllers/page-id-token.js';
+import {
+    factory as factoryPageIdToken2
+} from '../controllers/page-id-token2.js';
 
 export function registerRoutes() {
     //your routes here
-    factoryWizardContainer();
+    //factoryWizardContainer();
+    factoryWizardContainer2();
     factoryFoo();
     factoryBar();
     factoryPageOne();
     factoryPagetwo();
     factoryPageAccessToken();
-    factoryPageIdToken();
+    //factoryPageIdToken();
+    factoryPageIdToken2();
     //reset the default route
     ESPA.navigate('/');
 }
