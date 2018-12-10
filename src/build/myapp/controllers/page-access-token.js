@@ -8,46 +8,45 @@ import {
 import {
     getState
 } from '../services/state-machine.js';
-import { factory as factoryWizardPage } from '../services/wizard-page.js';
+import {
+    factory as factoryWizardPage
+} from '../services/wizard-page.js';
 import * as wizardEngine from "../services/wizard-engine.js"
 import * as promisesHelpers from "../helpers/promises.js"
-import fetchService from '../services/fetch-service.js';
+import * as fetchService from "../services/fetch-service.js";
+import * as wizardappapi from "../services/wizardappapi-client-services.js";
 import tpl from '../views/page-access-token.html';
 
 const wizardPage = factoryWizardPage({
-    onNext: function() {
+    onNext: function () {
         console.log("onNext");
         var el = document.getElementById('access_token');
         var state = getState();
         state.access_token = el.value;
         var promise = new Promise(function (resolve, reject) {
             // do a thing, possibly async, then…
-            fetchService.fetch('https://wizardappapi.azurewebsites.net/api/Identity/closed', {
-                headers: {
-                    "Authorization": "Bearer " + state.access_token,
-                    "x-authScheme": "One"
-                },
-            }).then((result) => {
-                if (result.response.status != 200) {
-                    var el = document.getElementById('access_token_error');
-                    el.innerHTML = "access_token has been rejected!";
-                    resolve(false);
-                } else {
-                    state.identity = result.json;
-                    resolve(true);
-                }
-            }).catch(function (error) {
-                reject(false);
-                console.log('There has been a problem with your fetch operation: ', error.message);
-            });
+            wizardappapi.fetchIdentity(state.access_token)
+                .then((result) => {
+                    if (result.response.status != 200) {
+                        var el = document.getElementById('access_token_error');
+                        el.innerHTML = "access_token has been rejected!";
+                        resolve(false);
+                    } else {
+                        state.identity = result.json;
+                        resolve(true);
+                    }
+                }).catch(function (error) {
+                    reject(false);
+                    console.log('There has been a problem with your fetch operation: ', error.message);
+                });
         });
         return promise;
     },
-    onBack: function() {
+    onBack: function () {
         console.log("onBack");
         return promisesHelpers.valueAsPromise(true);
     },
-    onCancel: function() {
+    onCancel: function () {
         console.log("onCancel");
         return promisesHelpers.valueAsPromise(true);
     }
