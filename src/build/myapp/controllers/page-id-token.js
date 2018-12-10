@@ -1,23 +1,15 @@
-import {
-    getCss,
-    bindEvents
-} from '../utils.js';
-import {
-    getDummyJsonAsPromise
-} from '../services/dummy.js';
+import { getCss, bindEvents } from '../utils.js';
+import { getDummyJsonAsPromise } from '../services/dummy.js';
+import tpl from '../views/page-id-token.html';
+import { factory as factoryWizardPage } from '../services/wizard-page.js';
+import * as wizardEngine from "../services/wizard-engine.js";
+import fetchService from '../services/fetch-service.js';
 import {
     getState
 } from '../services/state-machine.js';
-import {
-    WizardPage,
-    wizardEngine
-} from '../services/wizard-services.js';
-import fetchService from '../services/fetch-service.js';
-import tpl from '../views/page-id-token.html';
-
-class PageIdTokenWizardPage extends WizardPage {
-
-    onNext() {
+import * as promisesHelpers from "../helpers/promises.js"
+const wizardPage = factoryWizardPage({
+    onNext: function() {
         console.log("onNext");
         var el = document.getElementById('id_token');
         var state = getState();
@@ -60,24 +52,16 @@ class PageIdTokenWizardPage extends WizardPage {
             });
         });
         return promise;
-    }
-    onBack() {
+    },
+    onBack: function() {
         console.log("onBack");
-        var promise = new Promise(function (resolve, reject) {
-            resolve(true);
-        });
-        return promise;
-    }
-    onCancel() {
+        return promisesHelpers.valueAsPromise(true);
+    },
+    onCancel: function() {
         console.log("onCancel");
-        var promise = new Promise(function (resolve, reject) {
-            resolve(true);
-        });
-        return promise;
+        return promisesHelpers.valueAsPromise(true);
     }
-
-}
-
+});
 
 let viewData = null;
 let serviceData = null;
@@ -87,8 +71,8 @@ const factory = ((injected) => {
     const self = {
         cfg: (injected && injected.cfg) ? injected.cfg : null,
         tpl: (injected && injected.tpl) ? injected.tpl : tpl
-    }
-
+    }        
+    
     //overridding
     factoryScope = ESPA.factoryMixin(self, injected);
 
@@ -135,7 +119,7 @@ function _displayView() {
         el.value = state.id_token;
     }
     wizardEngine.setCurrentState({
-        currentPage: new PageIdTokenWizardPage(),
+        currentPage: wizardPage,
         nextPage: "page-access-token",
         backPage: null,
         back: false,
@@ -144,8 +128,6 @@ function _displayView() {
     });
 
 }
-
-
 
 export {
     factory,

@@ -8,16 +8,14 @@ import {
 import {
     getState
 } from '../services/state-machine.js';
-import {
-    WizardPage,
-    wizardEngine
-} from '../services/wizard-services.js';
+import { factory as factoryWizardPage } from '../services/wizard-page.js';
+import * as wizardEngine from "../services/wizard-engine.js"
+import * as promisesHelpers from "../helpers/promises.js"
 import fetchService from '../services/fetch-service.js';
 import tpl from '../views/page-access-token.html';
 
-class PageAccessTokenWizardPage extends WizardPage {
-
-    onNext() {
+const wizardPage = factoryWizardPage({
+    onNext: function() {
         console.log("onNext");
         var el = document.getElementById('access_token');
         var state = getState();
@@ -44,23 +42,16 @@ class PageAccessTokenWizardPage extends WizardPage {
             });
         });
         return promise;
-    }
-    onBack() {
+    },
+    onBack: function() {
         console.log("onBack");
-        var promise = new Promise(function (resolve, reject) {
-            resolve(true);
-        });
-        return promise;
-    }
-    onCancel() {
+        return promisesHelpers.valueAsPromise(true);
+    },
+    onCancel: function() {
         console.log("onCancel");
-        var promise = new Promise(function (resolve, reject) {
-            resolve(true);
-        });
-        return promise;
+        return promisesHelpers.valueAsPromise(true);
     }
-
-}
+});
 
 
 let viewData = null;
@@ -119,7 +110,7 @@ function _displayView() {
         el.value = state.access_token;
     }
     wizardEngine.setCurrentState({
-        currentPage: new PageAccessTokenWizardPage(),
+        currentPage: wizardPage,
         nextPage: "page-one",
         backPage: "page-id-token",
         back: true,

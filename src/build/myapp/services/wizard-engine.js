@@ -8,7 +8,7 @@ const state = {
     cancel: null,
     stateListener: null
 };
-
+export function getCurrentState() { return state;}
 export function setCurrentState(wizard) {
     state.currentPage = wizard.currentPage;
     state.nextPage = wizard.nextPage;

@@ -6,22 +6,25 @@ import {
     getDummyJsonAsPromise
 } from '../services/dummy.js';
 import {
-    getState
+    getState,
+    setState
 } from '../services/state-machine.js';
 
-import {
-    wizardEngine,
-    WizardBarListener
-} from '../services/wizard-services.js';
 import {
     apiService
 } from "../services/api-client-services.js"
 import tpl from '../views/wizard-container.html';
 import tplBar from '../views/wizard-button-bar.html';
 
-class WizardContainerWizardBarListener extends WizardBarListener {
+import {
+    factory as factoryWizardListener
+} from "../services/wizard-listener.js"
 
-    onStateChange(state) {
+import * as wizardEngine from "../services/wizard-engine.js"
+
+const wizardListener = factoryWizardListener({
+    onStateChange: function (state) {
+        ESPA.logger.log('onStateChange');
         var backButtonClasses = document.getElementById("back-wizard").classList;
         var nextButtonClasses = document.getElementById("next-wizard").classList;
         var cancelButtonClasses = document.getElementById("cancel-wizard").classList;
@@ -41,7 +44,8 @@ class WizardContainerWizardBarListener extends WizardBarListener {
             cancelButtonClasses.add("disabled");
         }
     }
-}
+});
+
 
 let viewData = null;
 let serviceData = null;
@@ -64,7 +68,7 @@ const factory = ((injected) => {
 
 function init() {
     ESPA.registerRoute('wizard-container', _registerRouteCallback);
-    wizardEngine.registerStateListener(new WizardContainerWizardBarListener());
+    wizardEngine.registerStateListener(wizardListener);
 }
 
 function _registerRouteCallback(data) {
@@ -77,6 +81,7 @@ function _registerRouteCallback(data) {
         .then((results) => {
             serviceData = results[1];
             viewData = Object.assign(viewData, serviceData);
+            setState({});
             _displayView();
         })
         .catch(e => {
@@ -94,7 +99,6 @@ function _displayView() {
     document.getElementById('main-container').style.display = 'block';
 
     bindEvents({
-        'click #go-to-bar': _onGoToBar,
         'click #back-wizard': _onBackWizard,
         'click #next-wizard': _onNextWizard,
         'click #cancel-wizard': _onCancelWizard
@@ -114,12 +118,11 @@ function _onBackWizard(e) {
     e.preventDefault();
 
     console.log("_onBackWizard");
-    wizardEngine.OnBackWizardPage().then((result) => {
+    wizardEngine.onBackWizardPage().then((result) => {
         if (result) {
             var state = wizardEngine.getCurrentState();
             ESPA.navigate(state.backPage);
         }
-
     });
 }
 
@@ -127,12 +130,11 @@ function _onNextWizard(e) {
     e.preventDefault();
 
     console.log("_onNextWizard");
-    wizardEngine.OnNextWizardPage().then((result) => {
+    wizardEngine.onNextWizardPage().then((result) => {
         if (result) {
             var state = wizardEngine.getCurrentState();
             ESPA.navigate(state.nextPage);
         }
-
     });
 }
 
@@ -140,15 +142,9 @@ function _onCancelWizard(e) {
     e.preventDefault();
 
     console.log("_onCancelWizard");
-    var ok = wizardEngine.OnCancelWizardPage();
+    var ok = wizardEngine.onCancelWizardPage();
 }
-
-function _onGoToBar(e) {
-    e.preventDefault();
-
-    ESPA.navigate('bar');
-}
-
+ 
 export {
     factory,
     _registerRouteCallback

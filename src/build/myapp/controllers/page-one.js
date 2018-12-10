@@ -10,31 +10,29 @@ import {
 } from '../services/state-machine.js';
 
 import {
-    WizardPage,
-    wizardEngine
-} from '../services/wizard-services.js';
+    factory as factoryWizardPage
+} from '../services/wizard-page.js';
+import * as wizardEngine from "../services/wizard-engine.js"
+import * as promisesHelpers from "../helpers/promises.js"
 
-import {
-    promisesHelpers
-} from '../helpers/promises.js';
 import tpl from '../views/page-one.html';
 
-class PageOneWizardPage extends WizardPage {
-
-    onNext() {
+const wizardPage = factoryWizardPage({
+    onNext: function () {
         console.log("onNext");
         return promisesHelpers.valueAsPromise(true);
-    }
-    onBack() {
+    },
+    onBack: function () {
         console.log("onBack");
         return promisesHelpers.valueAsPromise(true);
-    }
-    onCancel() {
+    },
+    onCancel: function () {
         console.log("onCancel");
         return promisesHelpers.valueAsPromise(true);
     }
+});
 
-}
+
 
 let viewData = null;
 let serviceData = null;
@@ -91,11 +89,10 @@ function _displayView() {
     document.getElementById('main-container').style.display = 'block';
 
     bindEvents({
-        'click #submitActivationKey': _onSumbitActivationKey,
-        'click #go-to-bar': _onGoToBar
+        'click #submitActivationKey': _onSumbitActivationKey
     });
     wizardEngine.setCurrentState({
-        currentPage: new PageOneWizardPage(),
+        currentPage: wizardPage,
         nextPage: "page-two",
         backPage: "page-access-token",
         back: true,
@@ -116,11 +113,6 @@ function _onSumbitActivationKey(e) {
     dd.value = state.activationKey;
 }
 
-function _onGoToBar(e) {
-    e.preventDefault();
-
-    ESPA.navigate('bar');
-}
 
 export {
     factory,
