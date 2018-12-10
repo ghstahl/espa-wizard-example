@@ -23,7 +23,46 @@ const wizardPage = factoryWizardPage({
         var el = document.getElementById('access_token');
         var state = getState();
         state.access_token = el.value;
-        var promise = new Promise(function (resolve, reject) {
+        var promise = Promise.all([
+                wizardappapi.fetchIdentity(state.access_token)
+                .then((result) => {
+                    return result;
+                }).catch(function (error) {
+                    ESPA.logger.error(e);
+                    throw new Error('apiPost error');
+                }),
+                wizardappapi.fetchEntitlements(state.access_token).then((result) => {
+                    return result;
+                }).catch(function (error) {
+                    ESPA.logger.error(e);
+                    throw new Error('apiPost error');
+                })
+            ]).then((results) => {
+                var success = false;
+                var identityResult = results[0];
+                var entitlementResult = results[1];
+                if (identityResult.response.status != 200) {
+                    var el = document.getElementById('access_token_error');
+                    el.innerHTML = "access_token has been rejected!";
+                } else {
+                    state.identity = identityResult.json;
+                    success = true;
+                }
+                if (entitlementResult.response.status != 200) {
+                    var el = document.getElementById('access_token_error');
+                    el.innerHTML = "entitlementResult!";
+                } else {
+                    state.entitlements = entitlementResult.json;
+                }
+                return success;
+            })
+            .catch(e => {
+                ESPA.logger.error(e);
+                return Promise.reject({
+                    error: '_registerRouteCallback promise chain terminated'
+                });
+            });
+        var promise2 = new Promise(function (resolve, reject) {
             // do a thing, possibly async, then…
             wizardappapi.fetchIdentity(state.access_token)
                 .then((result) => {

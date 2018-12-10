@@ -32,3 +32,12 @@ export async function fetchIdentity(access_token) {
         },
     })
 }
+export async function fetchEntitlements(access_token) {
+    // do a thing, possibly async, then…
+    return fetchService.fetch('https://wizardappapi.azurewebsites.net/api/RemoteJsonFile/closed?file=entitlements.json', {
+        headers: {
+            "Authorization": "Bearer " + access_token,
+            "x-authScheme": "One"
+        },
+    })
+}
