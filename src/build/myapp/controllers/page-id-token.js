@@ -10,7 +10,6 @@ import {
     factory as factoryWizardPage
 } from '../services/wizard-page.js';
 import * as wizardEngine from "../services/wizard-engine.js";
-import * as fetchService from "../services/fetch-service.js";
 import * as wizardappapi from "../services/wizardappapi-client-services.js";
 import {
     getState

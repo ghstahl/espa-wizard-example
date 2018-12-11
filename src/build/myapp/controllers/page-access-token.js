@@ -13,7 +13,6 @@ import {
 } from '../services/wizard-page.js';
 import * as wizardEngine from "../services/wizard-engine.js"
 import * as promisesHelpers from "../helpers/promises.js"
-import * as fetchService from "../services/fetch-service.js";
 import * as wizardappapi from "../services/wizardappapi-client-services.js";
 import tpl from '../views/page-access-token.html';
 

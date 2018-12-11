@@ -3,28 +3,26 @@ import {
     apiPostAsPromise
 } from './apiClient.js';
 
-class ApiService {
-    constructor() {
-        this.hosts = {};
-    }
-    registerHost(hostKey, host) {
-        this.hosts[hostKey] = host;
-    }
-    get(hostKey, obj) {
-        if (this.hosts[hostKey]) {
-            return apiGetAsPromise(this.hosts[hostKey], obj)
-        } else {
-            throw new Error('${hostKey} Does not exist');
-        }
+let hosts = {};
 
-    }
-    post(hostKey, obj) {
-        if (this.hosts[hostKey]) {
-            return apiPostAsPromise(this.hosts[hostKey], obj)
-        } else {
-            throw new Error('${hostKey} Does not exist');
-        }
-
-    }
+export function registerHost(hostKey, host) {
+    hosts[hostKey] = host;
 }
-export var apiService = new ApiService();
+
+export function get(hostKey, obj) {
+    if (hosts[hostKey]) {
+        return apiGetAsPromise(hosts[hostKey], obj)
+    } else {
+        throw new Error('${hostKey} Does not exist');
+    }
+
+}
+
+export function post(hostKey, obj) {
+    if (hosts[hostKey]) {
+        return apiPostAsPromise(hosts[hostKey], obj)
+    } else {
+        throw new Error('${hostKey} Does not exist');
+    }
+
+}
