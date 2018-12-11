@@ -1,6 +1,6 @@
 import * as fetchService from "./fetch-service.js";
 
-export async function fetchIdToken() {
+export function fetchIdToken() {
     let details = {
         'grant_type': "arbitrary_identity",
         'client_id': "arbitrary-resource-owner-client",
@@ -31,7 +31,7 @@ export async function fetchIdToken() {
         body: formBody
     })
 }
-export async function bind(id_token) {
+export function bind(id_token) {
     let details = {
         'id_token': id_token
     };
@@ -54,7 +54,7 @@ export async function bind(id_token) {
         body: formBody
     })
 }
-export async function fetchIdentity(access_token) {
+export function fetchIdentity(access_token) {
     // do a thing, possibly async, then…
     return fetchService.fetch('https://wizardappapi.azurewebsites.net/api/Identity/closed', {
         headers: {
@@ -63,7 +63,7 @@ export async function fetchIdentity(access_token) {
         },
     })
 }
-export async function fetchEntitlements(access_token) {
+export function fetchEntitlements(access_token) {
     // do a thing, possibly async, then…
     return fetchService.fetch('https://wizardappapi.azurewebsites.net/api/RemoteJsonFile/closed?file=entitlements.json', {
         headers: {

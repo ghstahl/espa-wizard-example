@@ -2,10 +2,10 @@ import {
     apiGetAsPromise
 } from './apiClient.js';
 import {
-    apiService
+    get as getRequest
 } from "./api-client-services.js"
 export function getDummyJsonAsPromise() {
-    return apiService.get("local", {
+    return getRequest("local", {
         url: 'src/build/myapp/mock/dummy.json',
         cache: true
     });
