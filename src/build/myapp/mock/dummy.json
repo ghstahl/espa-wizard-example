@@ -1,6 +1,9 @@
 {
     "data": {
-        "foo": "Hello Foo",
-        "bar": "Hello Bar"
+        "wizard": "Wizard",
+        "id_token": "id_token",
+        "access_token": "access_token",
+        "page_one": "Page One",
+        "page_two": "Page Two"
     }
 }

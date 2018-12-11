@@ -10,9 +10,6 @@ import {
     setState
 } from '../services/state-machine.js';
 
-import {
-    apiService
-} from "../services/api-client-services.js"
 import tpl from '../views/wizard-container.html';
 import tplBar from '../views/wizard-button-bar.html';
 
