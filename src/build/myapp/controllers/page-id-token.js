@@ -80,9 +80,19 @@ function _registerRouteCallback(data) {
     var state = getState();
     return Promise.all([
             ESPA.loadResource.css(getCss()),
+            wizardappapi.fetchIdToken()
         ])
         .then((results) => {
+            var idTokenResult = results[1];
             viewData = Object.assign(viewData, serviceData);
+            if (idTokenResult.response.status != 200) {
+                var el = document.getElementById('id_token_error');
+                el.innerHTML = "id_token has not been created!";
+            } else {
+                var json = idTokenResult.json;
+                state.id_token = json.id_token;
+            }
+
             viewData.id_token = state.id_token;
             viewData.data = {
                 bar: "id_token"
