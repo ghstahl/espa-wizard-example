@@ -1,10 +1,11 @@
 let factoryScope = null;
-
+const errorMsg = ":Method not implemented";
 const factory = ((injected) => {
     const self = {
         onNext: (injected && injected.onNext) ? injected.onNext : onNext,
         onBack: (injected && injected.onBack) ? injected.onBack : onBack,
-        onCancel: (injected && injected.onCancel) ? injected.onCancel : onCancel
+        onCancel: (injected && injected.onCancel) ? injected.onCancel : onCancel,
+        getRouteName: (injected && injected.getRouteName) ? injected.getRouteName : getRouteName
     }
 
     //overridding
@@ -13,16 +14,24 @@ const factory = ((injected) => {
     return factoryScope;
 });
 
+function throwNotImpleError(methodName) {
+    throw new Error(methodName + " :Method not implemented");
+}
+
 function onNext() {
-    throw new Error('You must implement onNext method');
+    throwNotImpleError('onNext')
 }
 
-function  onBack() {
-    throw new Error('You must implement onBack method');
+function onBack() {
+    throwNotImpleError('onBack')
 }
 
-function  onCancel() {
-    throw new Error('You must implement onCancel method');
+function onCancel() {
+    throwNotImpleError('onCancel')
+}
+
+function getRouteName() {
+    throwNotImpleError('getRouteName')
 }
 
 export {

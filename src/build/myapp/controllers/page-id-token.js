@@ -2,9 +2,7 @@ import {
     getCss,
     bindEvents
 } from '../utils.js';
-import {
-    getDummyJsonAsPromise
-} from '../services/dummy.js';
+ 
 import tpl from '../views/page-id-token.html';
 import {
     factory as factoryWizardPage
@@ -15,7 +13,11 @@ import {
     getState
 } from '../services/state-machine.js';
 import * as promisesHelpers from "../helpers/promises.js"
+
 const wizardPage = factoryWizardPage({
+    getRouteName: function () {
+        return 'page-id-token';
+    },
     onNext: function () {
         console.log("onNext");
         var el = document.getElementById('id_token');
@@ -71,7 +73,7 @@ const factory = ((injected) => {
 });
 
 function init() {
-    ESPA.registerRoute('page-id-token', _registerRouteCallback);
+    ESPA.registerRoute(wizardPage.getRouteName(), _registerRouteCallback);
 }
 
 function _registerRouteCallback(data) {
@@ -118,10 +120,21 @@ function _displayView() {
         var el = document.getElementById('id_token');
         el.value = state.id_token;
     }
+    var backPage = null;
+    if (viewData.directive === wizardEngine.navigationDirective.Next) {
+        backPage = viewData.prevPage;
+        state.prevIdTokenState = {
+            backPage: backPage
+        }
+    }
+    if (viewData.directive === wizardEngine.navigationDirective.Back) {
+        backPage = state.prevIdTokenState.backPage;
+    }
+
     wizardEngine.setCurrentState({
+        backPage: backPage,
         currentPage: wizardPage,
         nextPage: "page-access-token",
-        backPage: null,
         back: false,
         next: true,
         cancel: true

@@ -2,6 +2,7 @@ import {
     getCss,
     bindEvents
 } from '../utils.js';
+
 import {
     getDummyJsonAsPromise
 } from '../services/dummy.js';
@@ -18,6 +19,9 @@ import * as promisesHelpers from "../helpers/promises.js"
 import tpl from '../views/page-one.html';
 
 const wizardPage = factoryWizardPage({
+    getRouteName: function () {
+        return 'page-one';
+    },
     onNext: function () {
         console.log("onNext");
         return promisesHelpers.valueAsPromise(true);
@@ -53,7 +57,7 @@ const factory = ((injected) => {
 });
 
 function init() {
-    ESPA.registerRoute('page-one', _registerRouteCallback);
+    ESPA.registerRoute(wizardPage.getRouteName(), _registerRouteCallback);
 }
 
 function _registerRouteCallback(data) {
@@ -93,10 +97,21 @@ function _displayView() {
     bindEvents({
         'click #submitActivationKey': _onSumbitActivationKey
     });
+    var state = getState();
+    var backPage = null;
+    if (viewData.directive === wizardEngine.navigationDirective.Next) {
+        backPage = viewData.prevPage;
+        state.prevPageOneState = {
+            backPage: backPage
+        }
+    }
+    if (viewData.directive === wizardEngine.navigationDirective.Back) {
+        backPage = state.prevPageOneState.backPage;
+    }
     wizardEngine.setCurrentState({
+        backPage: backPage,
         currentPage: wizardPage,
         nextPage: "page-two",
-        backPage: "page-access-token",
         back: true,
         next: true,
         cancel: true
