@@ -2,9 +2,7 @@ import {
     getCss,
     bindEvents
 } from '../utils.js';
-import {
-    getDummyJsonAsPromise
-} from '../services/dummy.js';
+ 
 import tpl from '../views/page-id-token.html';
 import {
     factory as factoryWizardPage
