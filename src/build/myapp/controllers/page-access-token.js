@@ -17,6 +17,9 @@ import * as wizardappapi from "../services/wizardappapi-client-services.js";
 import tpl from '../views/page-access-token.html';
 
 const wizardPage = factoryWizardPage({
+    getRouteName: function () {
+        return 'page-access-token';
+    },
     onNext: function () {
         console.log("onNext");
         var el = document.getElementById('access_token');
@@ -110,7 +113,7 @@ const factory = ((injected) => {
 });
 
 function init() {
-    ESPA.registerRoute('page-access-token', _registerRouteCallback);
+    ESPA.registerRoute(wizardPage.getRouteName(), _registerRouteCallback);
 }
 
 function _registerRouteCallback(data) {
@@ -146,10 +149,20 @@ function _displayView() {
         var el = document.getElementById('access_token');
         el.value = state.access_token;
     }
+    var backPage = null;
+    if (viewData.directive === wizardEngine.navigationDirective.Next) {
+        backPage = viewData.prevPage;
+        state.prevAccessTokenState = {
+            backPage: backPage
+        }
+    }
+    if (viewData.directive === wizardEngine.navigationDirective.Back) {
+        backPage = state.prevAccessTokenState.backPage;
+    }
     wizardEngine.setCurrentState({
+        backPage: backPage,
         currentPage: wizardPage,
         nextPage: "page-one",
-        backPage: "page-id-token",
         back: true,
         next: true,
         cancel: true

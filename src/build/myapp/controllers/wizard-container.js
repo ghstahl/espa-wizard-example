@@ -108,7 +108,10 @@ function _displayView() {
         next: false,
         cancel: true
     });
-    ESPA.navigate('page-id-token');
+    ESPA.navigate('page-id-token', {
+        directive: wizardEngine.navigationDirective.Next,
+        prevPage: null
+    });
 }
 
 function _onBackWizard(e) {
@@ -118,7 +121,9 @@ function _onBackWizard(e) {
     wizardEngine.onBackWizardPage().then((result) => {
         if (result) {
             var state = wizardEngine.getCurrentState();
-            ESPA.navigate(state.backPage);
+            ESPA.navigate(state.backPage, {
+                directive: wizardEngine.navigationDirective.Back
+            });
         }
     });
 }
@@ -130,7 +135,10 @@ function _onNextWizard(e) {
     wizardEngine.onNextWizardPage().then((result) => {
         if (result) {
             var state = wizardEngine.getCurrentState();
-            ESPA.navigate(state.nextPage);
+            ESPA.navigate(state.nextPage, {
+                directive: wizardEngine.navigationDirective.Next,
+                prevPage: state.currentPage.getRouteName()
+            });
         }
     });
 }
@@ -141,7 +149,7 @@ function _onCancelWizard(e) {
     console.log("_onCancelWizard");
     var ok = wizardEngine.onCancelWizardPage();
 }
- 
+
 export {
     factory,
     _registerRouteCallback

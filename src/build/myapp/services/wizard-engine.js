@@ -8,7 +8,16 @@ const state = {
     cancel: null,
     stateListener: null
 };
-export function getCurrentState() { return state;}
+export var navigationDirective = {
+    Cancel: -1,
+    Back: 1,
+    Next: 2,
+    Finish: 3
+};
+
+export function getCurrentState() {
+    return state;
+}
 export function setCurrentState(wizard) {
     state.currentPage = wizard.currentPage;
     state.nextPage = wizard.nextPage;
@@ -32,7 +41,7 @@ export function onNextWizardPage() {
     if (state.currentPage) {
         return state.currentPage.onNext();
     } else {
-        return Promise.reject("currentPage not defined");         
+        return Promise.reject("currentPage not defined");
     }
 }
 
@@ -40,7 +49,7 @@ export function onBackWizardPage() {
     if (state.currentPage) {
         return state.currentPage.onBack();
     } else {
-        return Promise.reject("currentPage not defined");         
+        return Promise.reject("currentPage not defined");
     }
 }
 
@@ -48,6 +57,6 @@ export function onCancelWizardPage() {
     if (state.currentPage) {
         return state.currentPage.onCancel();
     } else {
-        return Promise.reject("currentPage not defined");         
+        return Promise.reject("currentPage not defined");
     }
 }
