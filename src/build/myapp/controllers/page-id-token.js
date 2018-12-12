@@ -14,7 +14,7 @@ import {
 } from '../services/state-machine.js';
 import * as promisesHelpers from "../helpers/promises.js"
 const _routeName = 'page-id-token';
-const wizardPage = factoryWizardPage({
+const _wizardPage = factoryWizardPage({
     getRouteName: function () {
         return _routeName;
     },
@@ -73,12 +73,12 @@ const factory = ((injected) => {
 });
 
 function init() {
-    ESPA.registerRoute(wizardPage.getRouteName(), _registerRouteCallback);
+    ESPA.registerRoute(_wizardPage.getRouteName(), _registerRouteCallback);
 }
 
 function _registerRouteCallback(data) {
     viewData = data;
-    wizardPage.augmentViewData(_routeName, viewData);
+    _wizardPage.augmentViewData(_routeName, viewData);
 
     var state = getState();
     return Promise.all([
@@ -98,18 +98,9 @@ function _registerRouteCallback(data) {
                 viewData.currentPageState.id_token = json.id_token;
             }
 
-            var backPage = null;
-            if (viewData.directive === wizardEngine.navigationDirective.Next) {
-                backPage = viewData.wizardState.prevPage;
-                viewData.currentPageState.backPage = backPage;
-            }
-            if (viewData.directive === wizardEngine.navigationDirective.Back) {
-                backPage = viewData.currentPageState.backPage;
-            }
-
             wizardEngine.setCurrentState({
-                backPage: backPage,
-                currentPage: wizardPage,
+                backPage: _wizardPage.getBackPage(viewData),
+                currentPage: _wizardPage,
                 nextPage: "page-access-token",
                 back: false,
                 next: true,

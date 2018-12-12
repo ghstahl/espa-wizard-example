@@ -70,16 +70,9 @@ function _registerRouteCallback(data) {
         .then((results) => {
             serviceData = results[1];
             viewData = Object.assign(viewData, serviceData);
-            var backPage = null;
-            if (viewData.directive === wizardEngine.navigationDirective.Next) {
-                backPage = viewData.wizardState.prevPage;
-                viewData.currentPageState.backPage = backPage;
-            }
-            if (viewData.directive === wizardEngine.navigationDirective.Back) {
-                backPage = viewData.currentPageState.backPage;
-            }
+
             wizardEngine.setCurrentState({
-                backPage: backPage,
+                backPage: _wizardPage.getBackPage(viewData),
                 currentPage: _wizardPage,
                 nextPage: null,
                 back: true,

@@ -2,7 +2,7 @@ import {
     getCss,
     bindEvents
 } from '../utils.js';
- 
+
 import {
     getState
 } from '../services/state-machine.js';
@@ -14,7 +14,7 @@ import * as promisesHelpers from "../helpers/promises.js"
 import * as wizardappapi from "../services/wizardappapi-client-services.js";
 import tpl from '../views/page-access-token.html';
 const _routeName = 'page-access-token';
-const wizardPage = factoryWizardPage({
+const _wizardPage = factoryWizardPage({
     getRouteName: function () {
         return _routeName;
     },
@@ -95,12 +95,12 @@ const factory = ((injected) => {
 });
 
 function init() {
-    ESPA.registerRoute(wizardPage.getRouteName(), _registerRouteCallback);
+    ESPA.registerRoute(_wizardPage.getRouteName(), _registerRouteCallback);
 }
 
 function _registerRouteCallback(data) {
     viewData = data;
-    wizardPage.augmentViewData(_routeName, viewData);
+    _wizardPage.augmentViewData(_routeName, viewData);
     var wizardState = viewData.wizardState;
     var currentPageState = viewData.currentPageState;
     currentPageState.access_token = wizardState.access_token;
@@ -111,18 +111,9 @@ function _registerRouteCallback(data) {
         ])
         .then((results) => {
             viewData = Object.assign(viewData, serviceData);
-
-            var backPage = null;
-            if (viewData.directive === wizardEngine.navigationDirective.Next) {
-                backPage = viewData.wizardState.prevPage;
-                viewData.currentPageState.backPage = backPage;
-            }
-            if (viewData.directive === wizardEngine.navigationDirective.Back) {
-                backPage = viewData.currentPageState.backPage;
-            }
             wizardEngine.setCurrentState({
-                backPage: backPage,
-                currentPage: wizardPage,
+                backPage: _wizardPage.getBackPage(viewData),
+                currentPage: _wizardPage,
                 nextPage: "page-one",
                 back: true,
                 next: true,

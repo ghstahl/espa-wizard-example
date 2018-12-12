@@ -19,7 +19,7 @@ import * as promisesHelpers from "../helpers/promises.js"
 import tpl from '../views/page-one.html';
 const _routeName = 'page-one';
 
-const wizardPage = factoryWizardPage({
+const _wizardPage = factoryWizardPage({
     getRouteName: function () {
         return _routeName;
     },
@@ -58,12 +58,12 @@ const factory = ((injected) => {
 });
 
 function init() {
-    ESPA.registerRoute(wizardPage.getRouteName(), _registerRouteCallback);
+    ESPA.registerRoute(_wizardPage.getRouteName(), _registerRouteCallback);
 }
 
 function _registerRouteCallback(data) {
     viewData = data;
-    wizardPage.augmentViewData(_routeName, viewData);
+    _wizardPage.augmentViewData(_routeName, viewData);
     var wizardState = viewData.wizardState;
     var currentPageState = viewData.currentPageState;
 
@@ -82,17 +82,10 @@ function _registerRouteCallback(data) {
                 console.log(entry);
             });
             viewData.entitlements = state.entitlements;
-            var backPage = null;
-            if (viewData.directive === wizardEngine.navigationDirective.Next) {
-                backPage = viewData.wizardState.prevPage;
-                viewData.currentPageState.backPage = backPage;
-            }
-            if (viewData.directive === wizardEngine.navigationDirective.Back) {
-                backPage = viewData.currentPageState.backPage;
-            }
+
             wizardEngine.setCurrentState({
-                backPage: backPage,
-                currentPage: wizardPage,
+                backPage: _wizardPage.getBackPage(viewData),
+                currentPage: _wizardPage,
                 nextPage: "page-two",
                 back: true,
                 next: true,

@@ -1,3 +1,4 @@
+import * as wizardEngine from "./wizard-engine.js"
 let factoryScope = null;
 const errorMsg = ":Method not implemented";
 const factory = ((injected) => {
@@ -7,6 +8,8 @@ const factory = ((injected) => {
         onCancel: (injected && injected.onCancel) ? injected.onCancel : onCancel,
         onFinish: (injected && injected.onFinish) ? injected.onFinish : onFinish,
         getRouteName: (injected && injected.getRouteName) ? injected.getRouteName : getRouteName,
+        getBackPage: (injected && injected.getBackPage) ? injected.getBackPage : getBackPage,
+
         augmentViewData: augmentViewData
     }
 
@@ -42,6 +45,18 @@ function augmentViewData(routeName, viewData) {
         wizardState[routeName] = {}
     }
     viewData.currentPageState = wizardState[routeName];
+}
+
+function getBackPage(viewData) {
+    var backPage = null;
+    if (viewData.directive === wizardEngine.navigationDirective.Next) {
+        backPage = viewData.wizardState.prevPage;
+        viewData.currentPageState.backPage = backPage;
+    }
+    if (viewData.directive === wizardEngine.navigationDirective.Back) {
+        backPage = viewData.currentPageState.backPage;
+    }
+    return backPage;
 }
 
 export {
