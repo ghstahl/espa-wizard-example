@@ -78,11 +78,11 @@ function _registerRouteCallback(data) {
     viewData = data || {};
     var state = getState();
     return Promise.all([
-            ESPA.loadResource.css(getCss()),
-            wizardappapi.fetchIdToken()
+            //ESPA.loadResource.css(getCss()),
+            //wizardappapi.fetchIdToken()
         ])
         .then((results) => {
-            var idTokenResult = results[1];
+            /*var idTokenResult = results[1];
             viewData = Object.assign(viewData, serviceData);
             if (idTokenResult.response.status != 200) {
                 var el = document.getElementById('id_token_error');
@@ -92,7 +92,8 @@ function _registerRouteCallback(data) {
                 state.id_token = json.id_token;
             }
 
-            viewData.id_token = state.id_token;
+            viewData.id_token = state.id_token;*/
+            viewData.id_token = 'test token';
             viewData.data = {
                 bar: "id_token"
             }

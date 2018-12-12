@@ -61,7 +61,7 @@ function _registerRouteCallback(data) {
     var state = getState();
     return Promise.all([
             ESPA.loadResource.css(getCss()),
-            getDummyJsonAsPromise()
+            //getDummyJsonAsPromise()
         ])
         .then((results) => {
             serviceData = results[1];
