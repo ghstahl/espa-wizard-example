@@ -3,8 +3,7 @@ export function getApiHost() {
 }
 
 export function getSpaHost() {    
-    //return 'http://localhost:8888/';
-    return 'https://s3.amazonaws.com/cct.sandbox/espa/myapp/';
+    return 'http://localhost:8888/';
 }
 
 export function getCss() {    

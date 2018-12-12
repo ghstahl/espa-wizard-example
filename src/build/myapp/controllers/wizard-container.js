@@ -77,21 +77,13 @@ function init() {
 function _registerRouteCallback(data) {
     viewData = data || {};
 
-    return Promise.all([            
-            //ESPA.loadResource.css(getCss()),
-            //getDummyJsonAsPromise()
+    return Promise.all([
+            ESPA.loadResource.css(getCss()),
+            getDummyJsonAsPromise()
         ])
         .then((results) => {
-            //serviceData = results[1];
-            viewData = Object.assign(viewData, {
-                "data": {
-                    "wizard": "Wizard",
-                    "id_token": "id_token",
-                    "access_token": "access_token",
-                    "page_one": "Page One",
-                    "page_two": "Page Two"
-                }
-            });
+            serviceData = results[1];
+            viewData = Object.assign(viewData, serviceData);
             setState({});
             _displayView();
         })
