@@ -2,7 +2,7 @@ import {
     getCss,
     bindEvents
 } from '../utils.js';
- 
+
 import tpl from '../views/page-id-token.html';
 import {
     factory as factoryWizardPage
@@ -132,12 +132,10 @@ function _displayView() {
     document.getElementById('main-container').style.display = 'block';
 
 
-    if (state.access_token) {
+    if (viewData.currentPageState.id_token) {
         var el = document.getElementById('id_token');
         el.value = viewData.currentPageState.id_token;
     }
-
-
 }
 
 export {
