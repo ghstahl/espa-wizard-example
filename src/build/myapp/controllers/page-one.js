@@ -39,33 +39,22 @@ const _wizardPage = factoryWizardPage({
 
 
 
-let viewData = null;
+let _viewData = null;
 let serviceData = null;
-let factoryScope = null;
-
-const factory = ((injected) => {
-    const self = {
-        cfg: (injected && injected.cfg) ? injected.cfg : null,
-        tpl: (injected && injected.tpl) ? injected.tpl : tpl
-    }
-
-    //overridding
-    factoryScope = ESPA.factoryMixin(self, injected);
-
-    init();
-
-    return factoryScope;
-});
-
-function init() {
-    ESPA.registerRoute(_wizardPage.getRouteName(), _registerRouteCallback);
+const _pageRecord = {
+    factoryScope: null,
+    tpl: tpl,
+    wizardPage: _wizardPage,
+    registerRouteCallback: _registerRouteCallback
 }
 
+const factory = _wizardPage.makeFactory(_pageRecord);
+
 function _registerRouteCallback(data) {
-    viewData = data;
-    _wizardPage.augmentViewData(_routeName, viewData);
-    var wizardState = viewData.wizardState;
-    var currentPageState = viewData.currentPageState;
+    _viewData = data;
+    _wizardPage.augmentViewData(_routeName, _viewData);
+    var wizardState = _viewData.wizardState;
+    var currentPageState = _viewData.currentPageState;
 
     var state = getState();
     return Promise.all([
@@ -74,17 +63,17 @@ function _registerRouteCallback(data) {
         ])
         .then((results) => {
             serviceData = results[1];
-            viewData = Object.assign(viewData, serviceData);
+            _viewData = Object.assign(_viewData, serviceData);
             state.identity.forEach(function (entry) {
                 if (entry.name == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier") {
-                    viewData.user = entry.value;
+                    _viewData.user = entry.value;
                 }
                 console.log(entry);
             });
-            viewData.entitlements = state.entitlements;
+            _viewData.entitlements = state.entitlements;
 
             wizardEngine.setCurrentState({
-                backPage: _wizardPage.getBackPage(viewData),
+                backPage: _wizardPage.getBackPage(_viewData),
                 currentPage: _wizardPage,
                 nextPage: "page-two",
                 back: true,
@@ -104,7 +93,7 @@ function _registerRouteCallback(data) {
 
 function _displayView() {
     document.getElementById('loader').style.display = 'none';
-    document.getElementById('wizard-content').innerHTML = ESPA.tmpl(factoryScope.tpl, viewData);
+    document.getElementById('wizard-content').innerHTML = ESPA.tmpl(_pageRecord.factoryScope.tpl, _viewData);
     document.getElementById('main-container').style.display = 'block';
 
     bindEvents({

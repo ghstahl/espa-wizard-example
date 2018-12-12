@@ -9,7 +9,7 @@ const factory = ((injected) => {
         onFinish: (injected && injected.onFinish) ? injected.onFinish : onFinish,
         getRouteName: (injected && injected.getRouteName) ? injected.getRouteName : getRouteName,
         getBackPage: (injected && injected.getBackPage) ? injected.getBackPage : getBackPage,
-
+        makeFactory: (injected && injected.makeFactory) ? injected.makeFactory : makeFactory,
         augmentViewData: augmentViewData
     }
 
@@ -57,6 +57,23 @@ function getBackPage(viewData) {
         backPage = viewData.currentPageState.backPage;
     }
     return backPage;
+}
+
+function makeFactory(pageRecord) {
+    var factory = ((injected) => {
+        const self = {
+            cfg: (injected && injected.cfg) ? injected.cfg : null,
+            tpl: (injected && injected.tpl) ? injected.tpl : pageRecord.tpl
+        }
+
+        //overridding
+        pageRecord.factoryScope = ESPA.factoryMixin(self, injected);
+
+        ESPA.registerRoute(pageRecord.wizardPage.getRouteName(), pageRecord.registerRouteCallback);
+
+        return pageRecord.factoryScope;
+    });
+    return factory;
 }
 
 export {

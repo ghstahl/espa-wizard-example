@@ -49,7 +49,7 @@ const wizardListener = factoryWizardListener({
 });
 
 
-let viewData = null;
+let _viewData = null;
 let serviceData = null;
 let factoryScope = null;
 
@@ -74,7 +74,7 @@ function init() {
 }
 
 function _registerRouteCallback(data) {
-    viewData = data || {};
+    _viewData = data || {};
     var state = getState();
     return Promise.all([
             ESPA.loadResource.css(getCss()),
@@ -82,7 +82,7 @@ function _registerRouteCallback(data) {
         ])
         .then((results) => {
             serviceData = results[1];
-            viewData = Object.assign(viewData, serviceData);
+            _viewData = Object.assign(_viewData, serviceData);
             state.wizardState = {}; // initialize wizardState.
 
             _displayView();
@@ -98,8 +98,8 @@ function _registerRouteCallback(data) {
 function _displayView() {
     var state = getState();
     document.getElementById('loader').style.display = 'none';
-    document.getElementById('main-content').innerHTML = ESPA.tmpl(factoryScope.tpl, viewData);
-    document.getElementById('wizard-button-bar').innerHTML = ESPA.tmpl(factoryScope.tplBar, viewData);
+    document.getElementById('main-content').innerHTML = ESPA.tmpl(factoryScope.tpl, _viewData);
+    document.getElementById('wizard-button-bar').innerHTML = ESPA.tmpl(factoryScope.tplBar, _viewData);
     document.getElementById('main-container').style.display = 'block';
 
     bindEvents({

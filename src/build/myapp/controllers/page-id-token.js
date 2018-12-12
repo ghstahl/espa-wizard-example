@@ -54,31 +54,21 @@ const _wizardPage = factoryWizardPage({
     }
 });
 
-let viewData = null;
+let _viewData = null;
 let serviceData = null;
-let factoryScope = null;
 
-const factory = ((injected) => {
-    const self = {
-        cfg: (injected && injected.cfg) ? injected.cfg : null,
-        tpl: (injected && injected.tpl) ? injected.tpl : tpl
-    }
-
-    //overridding
-    factoryScope = ESPA.factoryMixin(self, injected);
-
-    init();
-
-    return factoryScope;
-});
-
-function init() {
-    ESPA.registerRoute(_wizardPage.getRouteName(), _registerRouteCallback);
+const _pageRecord = {
+    factoryScope: null,
+    tpl: tpl,
+    wizardPage: _wizardPage,
+    registerRouteCallback: _registerRouteCallback
 }
 
+const factory = _wizardPage.makeFactory(_pageRecord);
+
 function _registerRouteCallback(data) {
-    viewData = data;
-    _wizardPage.augmentViewData(_routeName, viewData);
+    _viewData = data;
+    _wizardPage.augmentViewData(_routeName, _viewData);
 
     var state = getState();
     return Promise.all([
@@ -87,7 +77,7 @@ function _registerRouteCallback(data) {
         ])
         .then((results) => {
             var idTokenResult = results[1];
-            viewData = Object.assign(viewData, serviceData);
+            _viewData = Object.assign(_viewData, serviceData);
 
 
             if (idTokenResult.response.status != 200) {
@@ -95,11 +85,11 @@ function _registerRouteCallback(data) {
                 el.innerHTML = "id_token has not been created!";
             } else {
                 var json = idTokenResult.json;
-                viewData.currentPageState.id_token = json.id_token;
+                _viewData.currentPageState.id_token = json.id_token;
             }
 
             wizardEngine.setCurrentState({
-                backPage: _wizardPage.getBackPage(viewData),
+                backPage: _wizardPage.getBackPage(_viewData),
                 currentPage: _wizardPage,
                 nextPage: "page-access-token",
                 back: false,
@@ -119,13 +109,13 @@ function _registerRouteCallback(data) {
 
 function _displayView() {
     document.getElementById('loader').style.display = 'none';
-    document.getElementById('wizard-content').innerHTML = ESPA.tmpl(factoryScope.tpl, viewData);
+    document.getElementById('wizard-content').innerHTML = ESPA.tmpl(_pageRecord.factoryScope.tpl, _viewData);
     document.getElementById('main-container').style.display = 'block';
 
 
-    if (viewData.currentPageState.id_token) {
+    if (_viewData.currentPageState.id_token) {
         var el = document.getElementById('id_token');
-        el.value = viewData.currentPageState.id_token;
+        el.value = _viewData.currentPageState.id_token;
     }
 }
 

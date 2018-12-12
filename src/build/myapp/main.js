@@ -35,6 +35,9 @@ function _main() {
     var state = getState();
     registerApiHosts();
     registerRoutes();
+    //reset the default route
+    ESPA.navigate('/');
+
     //auto start the first route
 
     state.main = "started";

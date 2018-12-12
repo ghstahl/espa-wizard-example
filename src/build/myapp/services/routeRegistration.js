@@ -23,6 +23,5 @@
      factoryPagetwo();
      factoryPageAccessToken();
      factoryPageIdToken();
-     //reset the default route
-     ESPA.navigate('/');
+
  }
