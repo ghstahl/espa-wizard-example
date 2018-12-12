@@ -25,6 +25,7 @@ const wizardListener = factoryWizardListener({
         var backButtonClasses = document.getElementById("back-wizard").classList;
         var nextButtonClasses = document.getElementById("next-wizard").classList;
         var cancelButtonClasses = document.getElementById("cancel-wizard").classList;
+        var finishButtonClasses = document.getElementById("finish-wizard").classList;
         if (state.next) {
             nextButtonClasses.remove("disabled");
         } else {
@@ -39,6 +40,11 @@ const wizardListener = factoryWizardListener({
             cancelButtonClasses.remove("disabled");
         } else {
             cancelButtonClasses.add("disabled");
+        }
+        if (state.finish) {
+            finishButtonClasses.remove("disabled");
+        } else {
+            finishButtonClasses.add("disabled");
         }
     }
 });

@@ -2,9 +2,7 @@ import {
     getCss,
     bindEvents
 } from '../utils.js';
-import {
-    getDummyJsonAsPromise
-} from '../services/dummy.js';
+ 
 import {
     getState
 } from '../services/state-machine.js';
