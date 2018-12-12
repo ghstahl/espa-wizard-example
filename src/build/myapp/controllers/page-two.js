@@ -14,10 +14,10 @@ import {
 import * as wizardEngine from "../services/wizard-engine.js"
 import * as promisesHelpers from "../helpers/promises.js"
 import tpl from '../views/page-two.html';
-
-const wizardPage = factoryWizardPage({
+const _routeName = "page-two";
+const _wizardPage = factoryWizardPage({
     getRouteName: function () {
-        return 'page-two';
+        return _routeName;
     },
     onNext: function () {
         console.log("onNext");
@@ -53,12 +53,16 @@ const factory = ((injected) => {
 });
 
 function init() {
-    ESPA.registerRoute(wizardPage.getRouteName(), _registerRouteCallback);
+    ESPA.registerRoute(_routeName, _registerRouteCallback);
 }
 
 function _registerRouteCallback(data) {
-    viewData = data || {};
+    viewData = data;
+    _wizardPage.augmentViewData(_routeName, viewData);
+    var wizardState = viewData.wizardState;
+    var currentPageState = viewData.currentPageState;
 
+    var state = getState();
     return Promise.all([
             ESPA.loadResource.css(getCss()),
             getDummyJsonAsPromise()
@@ -66,6 +70,23 @@ function _registerRouteCallback(data) {
         .then((results) => {
             serviceData = results[1];
             viewData = Object.assign(viewData, serviceData);
+            var backPage = null;
+            if (viewData.directive === wizardEngine.navigationDirective.Next) {
+                backPage = viewData.wizardState.prevPage;
+                viewData.currentPageState.backPage = backPage;
+            }
+            if (viewData.directive === wizardEngine.navigationDirective.Back) {
+                backPage = viewData.currentPageState.backPage;
+            }
+            wizardEngine.setCurrentState({
+                backPage: backPage,
+                currentPage: _wizardPage,
+                nextPage: null,
+                back: true,
+                next: false,
+                finish: true,
+                cancel: true
+            });
             _displayView();
         })
         .catch(e => {
@@ -84,27 +105,6 @@ function _displayView() {
     bindEvents({
         'click #submitActivationKey': _onSumbitActivationKey,
     });
-    var state = getState();
-    var backPage = null;
-    if (viewData.directive === wizardEngine.navigationDirective.Next) {
-        backPage = viewData.prevPage;
-        state.prevPageTwoState = {
-            backPage: backPage
-        }
-    }
-    if (viewData.directive === wizardEngine.navigationDirective.Back) {
-        backPage = state.prevPageTwoState.backPage;
-    }
-    wizardEngine.setCurrentState({
-        backPage: backPage,
-        currentPage: wizardPage,
-        nextPage: null,
-        back: true,
-        next: false,
-        finish: true,
-        cancel: true
-    });
-
 }
 
 function _onSumbitActivationKey(e) {

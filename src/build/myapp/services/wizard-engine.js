@@ -60,3 +60,10 @@ export function onCancelWizardPage() {
         return Promise.reject("currentPage not defined");
     }
 }
+export function onFinishWizardPage() {
+    if (state.currentPage) {
+        return state.currentPage.onFinish();
+    } else {
+        return Promise.reject("currentPage not defined");
+    }
+}

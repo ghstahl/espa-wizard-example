@@ -15,10 +15,10 @@ import * as wizardEngine from "../services/wizard-engine.js"
 import * as promisesHelpers from "../helpers/promises.js"
 import * as wizardappapi from "../services/wizardappapi-client-services.js";
 import tpl from '../views/page-access-token.html';
-
+const _routeName = 'page-access-token';
 const wizardPage = factoryWizardPage({
     getRouteName: function () {
-        return 'page-access-token';
+        return _routeName;
     },
     onNext: function () {
         console.log("onNext");
@@ -64,23 +64,7 @@ const wizardPage = factoryWizardPage({
                     error: '_registerRouteCallback promise chain terminated'
                 });
             });
-        var promise2 = new Promise(function (resolve, reject) {
-            // do a thing, possibly async, then…
-            wizardappapi.fetchIdentity(state.access_token)
-                .then((result) => {
-                    if (result.response.status != 200) {
-                        var el = document.getElementById('access_token_error');
-                        el.innerHTML = "access_token has been rejected!";
-                        resolve(false);
-                    } else {
-                        state.identity = result.json;
-                        resolve(true);
-                    }
-                }).catch(function (error) {
-                    reject(false);
-                    console.log('There has been a problem with your fetch operation: ', error.message);
-                });
-        });
+
         return promise;
     },
     onBack: function () {
@@ -117,17 +101,36 @@ function init() {
 }
 
 function _registerRouteCallback(data) {
-    viewData = data || {};
+    viewData = data;
+    wizardPage.augmentViewData(_routeName, viewData);
+    var wizardState = viewData.wizardState;
+    var currentPageState = viewData.currentPageState;
+    currentPageState.access_token = wizardState.access_token;
+
     var state = getState();
     return Promise.all([
             ESPA.loadResource.css(getCss()),
         ])
         .then((results) => {
             viewData = Object.assign(viewData, serviceData);
-            viewData.access_token = state.access_token;
-            viewData.data = {
-                bar: "Bar This"
+
+            var backPage = null;
+            if (viewData.directive === wizardEngine.navigationDirective.Next) {
+                backPage = viewData.wizardState.prevPage;
+                viewData.currentPageState.backPage = backPage;
             }
+            if (viewData.directive === wizardEngine.navigationDirective.Back) {
+                backPage = viewData.currentPageState.backPage;
+            }
+            wizardEngine.setCurrentState({
+                backPage: backPage,
+                currentPage: wizardPage,
+                nextPage: "page-one",
+                back: true,
+                next: true,
+                cancel: true,
+                finish: false
+            });
             _displayView();
         })
         .catch(e => {
@@ -149,25 +152,6 @@ function _displayView() {
         var el = document.getElementById('access_token');
         el.value = state.access_token;
     }
-    var backPage = null;
-    if (viewData.directive === wizardEngine.navigationDirective.Next) {
-        backPage = viewData.prevPage;
-        state.prevAccessTokenState = {
-            backPage: backPage
-        }
-    }
-    if (viewData.directive === wizardEngine.navigationDirective.Back) {
-        backPage = state.prevAccessTokenState.backPage;
-    }
-    wizardEngine.setCurrentState({
-        backPage: backPage,
-        currentPage: wizardPage,
-        nextPage: "page-one",
-        back: true,
-        next: true,
-        cancel: true
-    });
-
 }
 
 export {

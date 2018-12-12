@@ -6,8 +6,7 @@ import {
     getDummyJsonAsPromise
 } from '../services/dummy.js';
 import {
-    getState,
-    setState
+    getState
 } from '../services/state-machine.js';
 
 import tpl from '../views/wizard-container.html';
@@ -25,6 +24,7 @@ const wizardListener = factoryWizardListener({
         var backButtonClasses = document.getElementById("back-wizard").classList;
         var nextButtonClasses = document.getElementById("next-wizard").classList;
         var cancelButtonClasses = document.getElementById("cancel-wizard").classList;
+        var finishButtonClasses = document.getElementById("finish-wizard").classList;
         if (state.next) {
             nextButtonClasses.remove("disabled");
         } else {
@@ -39,6 +39,11 @@ const wizardListener = factoryWizardListener({
             cancelButtonClasses.remove("disabled");
         } else {
             cancelButtonClasses.add("disabled");
+        }
+        if (state.finish) {
+            finishButtonClasses.remove("disabled");
+        } else {
+            finishButtonClasses.add("disabled");
         }
     }
 });
@@ -70,7 +75,7 @@ function init() {
 
 function _registerRouteCallback(data) {
     viewData = data || {};
-
+    var state = getState();
     return Promise.all([
             ESPA.loadResource.css(getCss()),
             getDummyJsonAsPromise()
@@ -78,7 +83,8 @@ function _registerRouteCallback(data) {
         .then((results) => {
             serviceData = results[1];
             viewData = Object.assign(viewData, serviceData);
-            setState({});
+            state.wizardState = {}; // initialize wizardState.
+
             _displayView();
         })
         .catch(e => {
@@ -90,6 +96,7 @@ function _registerRouteCallback(data) {
 }
 
 function _displayView() {
+    var state = getState();
     document.getElementById('loader').style.display = 'none';
     document.getElementById('main-content').innerHTML = ESPA.tmpl(factoryScope.tpl, viewData);
     document.getElementById('wizard-button-bar').innerHTML = ESPA.tmpl(factoryScope.tplBar, viewData);
@@ -98,7 +105,8 @@ function _displayView() {
     bindEvents({
         'click #back-wizard': _onBackWizard,
         'click #next-wizard': _onNextWizard,
-        'click #cancel-wizard': _onCancelWizard
+        'click #cancel-wizard': _onCancelWizard,
+        'click #finish-wizard': _onFinishWizard
     });
     wizardEngine.setCurrentState({
         currentPage: null,
@@ -106,23 +114,27 @@ function _displayView() {
         backPage: null,
         back: false,
         next: false,
-        cancel: true
+        cancel: true,
+        finish: false
     });
     ESPA.navigate('page-id-token', {
         directive: wizardEngine.navigationDirective.Next,
-        prevPage: null
+        prevPage: null,
+        wizardState: state.wizardState
     });
 }
 
 function _onBackWizard(e) {
     e.preventDefault();
-
     console.log("_onBackWizard");
     wizardEngine.onBackWizardPage().then((result) => {
         if (result) {
-            var state = wizardEngine.getCurrentState();
-            ESPA.navigate(state.backPage, {
-                directive: wizardEngine.navigationDirective.Back
+            var stateWizardPage = wizardEngine.getCurrentState();
+            var state = getState();
+            state.wizardState.prevPage = null;
+            ESPA.navigate(stateWizardPage.backPage, {
+                directive: wizardEngine.navigationDirective.Back,
+                wizardState: state.wizardState
             });
         }
     });
@@ -130,14 +142,15 @@ function _onBackWizard(e) {
 
 function _onNextWizard(e) {
     e.preventDefault();
-
     console.log("_onNextWizard");
     wizardEngine.onNextWizardPage().then((result) => {
         if (result) {
-            var state = wizardEngine.getCurrentState();
-            ESPA.navigate(state.nextPage, {
+            var stateWizardPage = wizardEngine.getCurrentState();
+            var state = getState();
+            state.wizardState.prevPage = stateWizardPage.currentPage.getRouteName();
+            ESPA.navigate(stateWizardPage.nextPage, {
                 directive: wizardEngine.navigationDirective.Next,
-                prevPage: state.currentPage.getRouteName()
+                wizardState: state.wizardState
             });
         }
     });
@@ -145,11 +158,15 @@ function _onNextWizard(e) {
 
 function _onCancelWizard(e) {
     e.preventDefault();
-
     console.log("_onCancelWizard");
     var ok = wizardEngine.onCancelWizardPage();
 }
 
+function _onFinishWizard(e) {
+    e.preventDefault();
+    console.log("_onFinishWizard");
+    var ok = wizardEngine.onFinishWizardPage();
+}
 export {
     factory,
     _registerRouteCallback

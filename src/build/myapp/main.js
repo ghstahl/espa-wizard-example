@@ -9,6 +9,7 @@ import {
     registerRoutes
 } from './services/routeRegistration.js';
 import {
+    setState,
     getState
 } from './services/state-machine.js';
 
@@ -30,10 +31,12 @@ if (ESPA.store.get('app/context/mode') === 'non-test') {
 }
 
 function _main() {
+    setState({}); // make sure that something is in the store for state.
+    var state = getState();
     registerApiHosts();
     registerRoutes();
     //auto start the first route
-    var state = getState();
+
     state.main = "started";
     ESPA.navigate('wizard-container');
 }

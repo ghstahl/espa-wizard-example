@@ -15,20 +15,20 @@ import {
     getState
 } from '../services/state-machine.js';
 import * as promisesHelpers from "../helpers/promises.js"
-
+const _routeName = 'page-id-token';
 const wizardPage = factoryWizardPage({
     getRouteName: function () {
-        return 'page-id-token';
+        return _routeName;
     },
     onNext: function () {
         console.log("onNext");
         var el = document.getElementById('id_token');
-        var state = getState();
-        state.id_token = el.value;
+        var wizardState = getState().wizardState;
+        var id_token = el.value;
         var promise = new Promise(function (resolve, reject) {
             // do a thing, possibly async, then…
             wizardappapi
-                .bind(state.id_token)
+                .bind(id_token)
                 .then((result) => {
                     if (result.response.status != 200) {
                         var el = document.getElementById('id_token_error');
@@ -36,7 +36,7 @@ const wizardPage = factoryWizardPage({
                         resolve(false);
                     } else {
                         var json = result.json;
-                        state.access_token = json.access_token;
+                        wizardState.access_token = json.access_token;
                         resolve(true);
                     }
                 }).catch(function (error) {
@@ -79,7 +79,9 @@ function init() {
 }
 
 function _registerRouteCallback(data) {
-    viewData = data || {};
+    viewData = data;
+    wizardPage.augmentViewData(_routeName, viewData);
+
     var state = getState();
     return Promise.all([
             ESPA.loadResource.css(getCss()),
@@ -88,18 +90,34 @@ function _registerRouteCallback(data) {
         .then((results) => {
             var idTokenResult = results[1];
             viewData = Object.assign(viewData, serviceData);
+
+
             if (idTokenResult.response.status != 200) {
                 var el = document.getElementById('id_token_error');
                 el.innerHTML = "id_token has not been created!";
             } else {
                 var json = idTokenResult.json;
-                state.id_token = json.id_token;
+                viewData.currentPageState.id_token = json.id_token;
             }
 
-            viewData.id_token = state.id_token;
-            viewData.data = {
-                bar: "id_token"
+            var backPage = null;
+            if (viewData.directive === wizardEngine.navigationDirective.Next) {
+                backPage = viewData.wizardState.prevPage;
+                viewData.currentPageState.backPage = backPage;
             }
+            if (viewData.directive === wizardEngine.navigationDirective.Back) {
+                backPage = viewData.currentPageState.backPage;
+            }
+
+            wizardEngine.setCurrentState({
+                backPage: backPage,
+                currentPage: wizardPage,
+                nextPage: "page-access-token",
+                back: false,
+                next: true,
+                cancel: true,
+                finish: false
+            });
             _displayView();
         })
         .catch(e => {
@@ -115,31 +133,12 @@ function _displayView() {
     document.getElementById('wizard-content').innerHTML = ESPA.tmpl(factoryScope.tpl, viewData);
     document.getElementById('main-container').style.display = 'block';
 
-    bindEvents({});
-    var state = getState();
+
     if (state.access_token) {
         var el = document.getElementById('id_token');
-        el.value = state.id_token;
-    }
-    var backPage = null;
-    if (viewData.directive === wizardEngine.navigationDirective.Next) {
-        backPage = viewData.prevPage;
-        state.prevIdTokenState = {
-            backPage: backPage
-        }
-    }
-    if (viewData.directive === wizardEngine.navigationDirective.Back) {
-        backPage = state.prevIdTokenState.backPage;
+        el.value = viewData.currentPageState.id_token;
     }
 
-    wizardEngine.setCurrentState({
-        backPage: backPage,
-        currentPage: wizardPage,
-        nextPage: "page-access-token",
-        back: false,
-        next: true,
-        cancel: true
-    });
 
 }
 

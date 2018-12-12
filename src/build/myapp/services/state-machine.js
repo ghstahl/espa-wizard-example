@@ -1,5 +1,5 @@
 export function getState() {
-    return ESPA.store.get('myapp/state') || {};
+    return ESPA.store.get('myapp/state');
 }
 
 export function setState(obj) {

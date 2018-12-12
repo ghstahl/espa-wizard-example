@@ -5,7 +5,9 @@ const factory = ((injected) => {
         onNext: (injected && injected.onNext) ? injected.onNext : onNext,
         onBack: (injected && injected.onBack) ? injected.onBack : onBack,
         onCancel: (injected && injected.onCancel) ? injected.onCancel : onCancel,
-        getRouteName: (injected && injected.getRouteName) ? injected.getRouteName : getRouteName
+        onFinish: (injected && injected.onFinish) ? injected.onFinish : onFinish,
+        getRouteName: (injected && injected.getRouteName) ? injected.getRouteName : getRouteName,
+        augmentViewData: augmentViewData
     }
 
     //overridding
@@ -30,8 +32,16 @@ function onCancel() {
     throwNotImpleError('onCancel')
 }
 
-function getRouteName() {
-    throwNotImpleError('getRouteName')
+function onFinish() {
+    throwNotImpleError('onFinish')
+}
+
+function augmentViewData(routeName, viewData) {
+    var wizardState = viewData.wizardState;
+    if (wizardState[routeName] === undefined) {
+        wizardState[routeName] = {}
+    }
+    viewData.currentPageState = wizardState[routeName];
 }
 
 export {
