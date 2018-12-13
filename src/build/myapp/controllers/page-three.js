@@ -2,23 +2,19 @@ import {
     getCss,
     bindEvents
 } from '../utils.js';
-
 import {
     getDummyJsonAsPromise
 } from '../services/dummy.js';
 import {
     getState
 } from '../services/state-machine.js';
-
 import {
     factory as factoryWizardPage
 } from '../services/wizard-page.js';
 import * as wizardEngine from "../services/wizard-engine.js"
 import * as promisesHelpers from "../helpers/promises.js"
-
-import tpl from '../views/page-one.html';
-const _routeName = 'page-one';
-
+import tpl from '../views/page-three.html';
+const _routeName = "page-three";
 const _wizardPage = factoryWizardPage({
     getRouteName: function () {
         return _routeName;
@@ -38,7 +34,6 @@ const _wizardPage = factoryWizardPage({
 });
 
 
-
 let _viewData = null;
 let serviceData = null;
 const _pageRecord = {
@@ -55,9 +50,7 @@ function _registerRouteCallback(data) {
     _wizardPage.augmentViewData(_routeName, _viewData);
     var wizardState = _viewData.wizardState;
     var currentPageState = _viewData.currentPageState;
-    if (currentPageState.radioId === undefined) {
-        currentPageState.radioId = "rad1";
-    }
+
     var state = getState();
     return Promise.all([
             ESPA.loadResource.css(getCss()),
@@ -66,22 +59,15 @@ function _registerRouteCallback(data) {
         .then((results) => {
             serviceData = results[1];
             _viewData = Object.assign(_viewData, serviceData);
-            state.identity.forEach(function (entry) {
-                if (entry.name == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier") {
-                    _viewData.user = entry.value;
-                }
-                console.log(entry);
-            });
-            _viewData.entitlements = state.entitlements;
 
             wizardEngine.setCurrentState({
                 backPage: _wizardPage.getBackPage(_viewData),
                 currentPage: _wizardPage,
-                nextPage: "page-two",
+                nextPage: null,
                 back: true,
-                next: true,
-                cancel: true,
-                finish: false
+                next: false,
+                finish: true,
+                cancel: true
             });
             _displayView();
         })
@@ -94,44 +80,14 @@ function _registerRouteCallback(data) {
 }
 
 function _displayView() {
-    var currentPageState = _viewData.currentPageState;
     document.getElementById('loader').style.display = 'none';
     document.getElementById('wizard-content').innerHTML = ESPA.tmpl(_pageRecord.factoryScope.tpl, _viewData);
     document.getElementById('main-container').style.display = 'block';
 
     bindEvents({
-        'click #submitActivationKey': _onSumbitActivationKey,
-        'click #rad1': _radHandler,
-        'click #rad2': _radHandler,
+
     });
-    document.getElementById(currentPageState.radioId).checked = true;
-
-
 }
-
-function _radHandler(e) {
-    var currentPageState = _viewData.currentPageState;
-    currentPageState.radioId = e.srcElement.id;
-    var state = wizardEngine.getCurrentState();
-    if (currentPageState.radioId === 'rad1') {
-        state.nextPage = 'page-two'
-    }
-    if (currentPageState.radioId === 'rad2') {
-        state.nextPage = 'page-three'
-    }
-}
-
-function _onSumbitActivationKey(e) {
-    e.preventDefault();
-    const today = new SimpleDate(2000, 2, 28);
-    today.addDays(1);
-    var state = getState();
-    var dd = document.getElementById('activationKey');
-    state.activationKey = dd.value;
-    dd = document.getElementById('activationKeyEcho');
-    dd.value = state.activationKey;
-}
-
 
 export {
     factory,
