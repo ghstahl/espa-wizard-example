@@ -1,25 +1,17 @@
 import {
-    getCss,
-    bindEvents
+    getCss
 } from '../utils.js';
 
 import {
     getDummyJsonAsPromise
 } from '../services/dummy.js';
-import {
-    getState
-} from '../services/state-machine.js';
 
-import {
-    factory as factoryWizardPage
-} from '../services/wizard-page.js';
-import * as wizardEngine from "../services/wizard-engine.js"
 import * as promisesHelpers from "../helpers/promises.js"
 
 import tpl from '../views/page-one.html';
 const _routeName = 'page-one';
 
-const _wizardPage = factoryWizardPage({
+const _wizardPage = ESPA.plugins.factoryWizardPage({
     getRouteName: function () {
         return _routeName;
     },
@@ -58,7 +50,7 @@ function _registerRouteCallback(data) {
     if (currentPageState.radioId === undefined) {
         currentPageState.radioId = "rad1";
     }
-    var state = getState();
+    var state = ESPA.plugins.state.get();
     return Promise.all([
             ESPA.loadResource.css(getCss()),
             getDummyJsonAsPromise()
@@ -74,7 +66,7 @@ function _registerRouteCallback(data) {
             });
             _viewData.entitlements = state.entitlements;
 
-            wizardEngine.setCurrentState({
+            ESPA.plugins.wizardEngine.setCurrentState({
                 backPage: _wizardPage.getBackPage(_viewData),
                 currentPage: _wizardPage,
                 nextPage: "page-two",
@@ -99,7 +91,7 @@ function _displayView() {
     document.getElementById('wizard-content').innerHTML = ESPA.tmpl(_pageRecord.factoryScope.tpl, _viewData);
     document.getElementById('main-container').style.display = 'block';
 
-    bindEvents({
+    ESPA.plugins.bindEvents({
         'click #submitActivationKey': _onSumbitActivationKey,
         'click #rad1': _radHandler,
         'click #rad2': _radHandler,
@@ -112,7 +104,7 @@ function _displayView() {
 function _radHandler(e) {
     var currentPageState = _viewData.currentPageState;
     currentPageState.radioId = e.srcElement.id;
-    var state = wizardEngine.getCurrentState();
+    var state = ESPA.plugins.wizardEngine.getCurrentState();
     if (currentPageState.radioId === 'rad1') {
         state.nextPage = 'page-two'
     }
@@ -125,7 +117,7 @@ function _onSumbitActivationKey(e) {
     e.preventDefault();
     const today = new SimpleDate(2000, 2, 28);
     today.addDays(1);
-    var state = getState();
+    var state = ESPA.plugins.state.get();
     var dd = document.getElementById('activationKey');
     state.activationKey = dd.value;
     dd = document.getElementById('activationKeyEcho');

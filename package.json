@@ -78,6 +78,7 @@
     "postinstall": "jspm i",
     "dev": "live-server --port=8888 --cors",
     "build": "node scripts/build",
+    "build-plugin": "node scripts/build-plugin",
     "build-scss": "node scripts/build-scss",
     "build-less": "node scripts/build-less",
     "build-rollup": "node scripts/buildRollup",

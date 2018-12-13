@@ -1,4 +1,3 @@
-import * as wizardEngine from "./wizard-engine.js"
 let factoryScope = null;
 const errorMsg = ":Method not implemented";
 const factory = ((injected) => {
@@ -49,11 +48,11 @@ function augmentViewData(routeName, viewData) {
 
 function getBackPage(viewData) {
     var backPage = null;
-    if (viewData.directive === wizardEngine.navigationDirective.Next) {
+    if (viewData.directive === ESPA.plugins.wizardEngine.navigationDirective.Next) {
         backPage = viewData.wizardState.prevPage;
         viewData.currentPageState.backPage = backPage;
     }
-    if (viewData.directive === wizardEngine.navigationDirective.Back) {
+    if (viewData.directive === ESPA.plugins.wizardEngine.navigationDirective.Back) {
         backPage = viewData.currentPageState.backPage;
     }
     return backPage;

@@ -1,21 +1,14 @@
 import {
-    getCss,
-    bindEvents
+    getCss
 } from '../utils.js';
 import {
     getDummyJsonAsPromise
 } from '../services/dummy.js';
-import {
-    getState
-} from '../services/state-machine.js';
-import {
-    factory as factoryWizardPage
-} from '../services/wizard-page.js';
-import * as wizardEngine from "../services/wizard-engine.js"
+
 import * as promisesHelpers from "../helpers/promises.js"
 import tpl from '../views/page-three.html';
 const _routeName = "page-three";
-const _wizardPage = factoryWizardPage({
+const _wizardPage = ESPA.plugins.factoryWizardPage({
     getRouteName: function () {
         return _routeName;
     },
@@ -51,7 +44,7 @@ function _registerRouteCallback(data) {
     var wizardState = _viewData.wizardState;
     var currentPageState = _viewData.currentPageState;
 
-    var state = getState();
+    var state = ESPA.plugins.state.get();
     return Promise.all([
             ESPA.loadResource.css(getCss()),
             getDummyJsonAsPromise()
@@ -60,7 +53,7 @@ function _registerRouteCallback(data) {
             serviceData = results[1];
             _viewData = Object.assign(_viewData, serviceData);
 
-            wizardEngine.setCurrentState({
+            ESPA.plugins.wizardEngine.setCurrentState({
                 backPage: _wizardPage.getBackPage(_viewData),
                 currentPage: _wizardPage,
                 nextPage: null,
@@ -84,7 +77,7 @@ function _displayView() {
     document.getElementById('wizard-content').innerHTML = ESPA.tmpl(_pageRecord.factoryScope.tpl, _viewData);
     document.getElementById('main-container').style.display = 'block';
 
-    bindEvents({
+    ESPA.plugins.bindEvents({
 
     });
 }

@@ -1,4 +1,5 @@
 import '../../../node_modules/espa/barebone.js';
+import './services/plugin-core.js';
 import {
     polyfill
 } from './utils.js';
@@ -8,10 +9,6 @@ import {
 import {
     registerRoutes
 } from './services/routeRegistration.js';
-import {
-    setState,
-    getState
-} from './services/state-machine.js';
 
 ESPA.store.set('app/context/name', 'myapp');
 if (!ESPA.store.get('app/context/mode')) {
@@ -31,8 +28,8 @@ if (ESPA.store.get('app/context/mode') === 'non-test') {
 }
 
 function _main() {
-    setState({}); // make sure that something is in the store for state.
-    var state = getState();
+    ESPA.plugins.state.set({}); // make sure that something is in the store for state.
+    var state = ESPA.plugins.state.get();
     registerApiHosts();
     registerRoutes();
     //reset the default route

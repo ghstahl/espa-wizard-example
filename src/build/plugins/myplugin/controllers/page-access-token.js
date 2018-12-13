@@ -1,27 +1,18 @@
 import {
-    getCss,
-    bindEvents
+    getCss
 } from '../utils.js';
-
-import {
-    getState
-} from '../services/state-machine.js';
-import {
-    factory as factoryWizardPage
-} from '../services/wizard-page.js';
-import * as wizardEngine from "../services/wizard-engine.js"
 import * as promisesHelpers from "../helpers/promises.js"
 import * as wizardappapi from "../services/wizardappapi-client-services.js";
 import tpl from '../views/page-access-token.html';
 const _routeName = 'page-access-token';
-const _wizardPage = factoryWizardPage({
+const _wizardPage = ESPA.plugins.factoryWizardPage({
     getRouteName: function () {
         return _routeName;
     },
     onNext: function () {
         console.log("onNext");
         var el = document.getElementById('access_token');
-        var state = getState();
+        var state = ESPA.plugins.state.get();
         state.access_token = el.value;
         var promise = Promise.all([
                 wizardappapi.fetchIdentity(state.access_token)
@@ -97,13 +88,13 @@ function _registerRouteCallback(data) {
     var currentPageState = _viewData.currentPageState;
     currentPageState.access_token = wizardState.access_token;
 
-    var state = getState();
+    var state = ESPA.plugins.state.get();
     return Promise.all([
             ESPA.loadResource.css(getCss()),
         ])
         .then((results) => {
             _viewData = Object.assign(_viewData, serviceData);
-            wizardEngine.setCurrentState({
+            ESPA.plugins.wizardEngine.setCurrentState({
                 backPage: _wizardPage.getBackPage(_viewData),
                 currentPage: _wizardPage,
                 nextPage: "page-one",
@@ -127,8 +118,8 @@ function _displayView() {
     document.getElementById('wizard-content').innerHTML = ESPA.tmpl(_pageRecord.factoryScope.tpl, _viewData);
     document.getElementById('main-container').style.display = 'block';
 
-    bindEvents({});
-    var state = getState();
+    ESPA.plugins.bindEvents({});
+    var state = ESPA.plugins.state.get();
     if (state.access_token) {
         var el = document.getElementById('access_token');
         el.value = state.access_token;

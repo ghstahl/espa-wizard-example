@@ -55,7 +55,14 @@ SystemJS.config({
   map: {
     "assert": "npm:jspm-nodelibs-assert@0.2.1",
     "process": "npm:jspm-nodelibs-process@0.2.1"
-  },
-  packages: {    
+  },  
+  packages: {
+    "src/build/plugins/myplugin": {      
+      "map": {
+        "./main.js": {
+          "production": "./main.prod.js"
+        }
+      }
+    }
   }
 });

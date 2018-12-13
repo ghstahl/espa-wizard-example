@@ -1,5 +1,3 @@
-import * as fetchService from "./fetch-service.js";
-
 export function fetchIdToken() {
     let details = {
         'grant_type': "arbitrary_identity",
@@ -22,7 +20,7 @@ export function fetchIdToken() {
     formBody = formBody.join("&");
 
     // do a thing, possibly async, then…
-    return fetchService.fetch('https://p7identityserver4.azurewebsites.net/connect/token', {
+    return ESPA.plugins.fetchService.fetch('https://p7identityserver4.azurewebsites.net/connect/token', {
         method: "POST",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded",
@@ -45,7 +43,7 @@ export function bind(id_token) {
     formBody = formBody.join("&");
 
     // do a thing, possibly async, then…
-    return fetchService.fetch('https://wizardappapi.azurewebsites.net/api/Identity/bind', {
+    return ESPA.plugins.fetchService.fetch('https://wizardappapi.azurewebsites.net/api/Identity/bind', {
         method: "POST",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded",
@@ -56,7 +54,7 @@ export function bind(id_token) {
 }
 export function fetchIdentity(access_token) {
     // do a thing, possibly async, then…
-    return fetchService.fetch('https://wizardappapi.azurewebsites.net/api/Identity/closed', {
+    return ESPA.plugins.fetchService.fetch('https://wizardappapi.azurewebsites.net/api/Identity/closed', {
         headers: {
             "Authorization": "Bearer " + access_token,
             "x-authScheme": "One"
@@ -65,7 +63,7 @@ export function fetchIdentity(access_token) {
 }
 export function fetchEntitlements(access_token) {
     // do a thing, possibly async, then…
-    return fetchService.fetch('https://wizardappapi.azurewebsites.net/api/RemoteJsonFile/closed?file=entitlements.json', {
+    return ESPA.plugins.fetchService.fetch('https://wizardappapi.azurewebsites.net/api/RemoteJsonFile/closed?file=entitlements.json', {
         headers: {
             "Authorization": "Bearer " + access_token,
             "x-authScheme": "One"

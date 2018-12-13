@@ -1,27 +1,19 @@
 import {
-    getCss,
-    bindEvents
+    getCss
 } from '../utils.js';
 
 import tpl from '../views/page-id-token.html';
-import {
-    factory as factoryWizardPage
-} from '../services/wizard-page.js';
-import * as wizardEngine from "../services/wizard-engine.js";
 import * as wizardappapi from "../services/wizardappapi-client-services.js";
-import {
-    getState
-} from '../services/state-machine.js';
 import * as promisesHelpers from "../helpers/promises.js"
 const _routeName = 'page-id-token';
-const _wizardPage = factoryWizardPage({
+const _wizardPage = ESPA.plugins.factoryWizardPage({
     getRouteName: function () {
         return _routeName;
     },
     onNext: function () {
         console.log("onNext");
         var el = document.getElementById('id_token');
-        var wizardState = getState().wizardState;
+        var wizardState = ESPA.plugins.state.get().wizardState;
         var id_token = el.value;
         var promise = new Promise(function (resolve, reject) {
             // do a thing, possibly async, then…
@@ -70,7 +62,7 @@ function _registerRouteCallback(data) {
     _viewData = data;
     _wizardPage.augmentViewData(_routeName, _viewData);
 
-    var state = getState();
+    var state = ESPA.plugins.state.get();
     return Promise.all([
             ESPA.loadResource.css(getCss()),
             wizardappapi.fetchIdToken()
@@ -88,7 +80,7 @@ function _registerRouteCallback(data) {
                 _viewData.currentPageState.id_token = json.id_token;
             }
 
-            wizardEngine.setCurrentState({
+            ESPA.plugins.wizardEngine.setCurrentState({
                 backPage: _wizardPage.getBackPage(_viewData),
                 currentPage: _wizardPage,
                 nextPage: "page-access-token",

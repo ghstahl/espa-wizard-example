@@ -1,3 +1,4 @@
+//TODO: consolidate this with the plugin's version
 export function getApiHost() {
     return 'http://localhost:8888/';
 }
@@ -6,13 +7,14 @@ export function getSpaHost() {
     return 'http://localhost:8888/';
 }
 
+function getCurrentContext() {
+    return ESPA.store.get('app/context/name');
+}
+
 export function getCss() {    
     return `${getSpaHost()}src/build/${getCurrentContext()}/styles/${getCurrentContext()}.css`;
 }
 
-function getCurrentContext() {
-    return ESPA.store.get('app/context/name');
-}
 
 export function bindEvents(obj) {
     for (const key in obj) {
