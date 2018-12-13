@@ -8,8 +8,8 @@ import {
 
 import * as promisesHelpers from "../helpers/promises.js"
 
-import tpl from '../views/page-one.html';
-const _routeName = 'page-one';
+import tpl from '../views/page-harvest.html';
+const _routeName = 'page-harvest';
 
 const _wizardPage = ESPA.plugins.factoryWizardPage({
     getRouteName: function () {
@@ -95,6 +95,7 @@ function _displayView() {
         'click #submitActivationKey': _onSumbitActivationKey,
         'click #rad1': _radHandler,
         'click #rad2': _radHandler,
+        'click #rad3': _radHandler,
     });
     document.getElementById(currentPageState.radioId).checked = true;
 
@@ -104,9 +105,13 @@ function _displayView() {
 function _radHandler(e) {
     var currentPageState = _viewData.currentPageState;
     currentPageState.radioId = e.srcElement.id;
-    var value = e.srcElement.value;
     var state = ESPA.plugins.wizardEngine.getCurrentState();
-    state.nextPage = value;
+    if (currentPageState.radioId === 'rad1') {
+        state.nextPage = 'page-two'
+    }
+    if (currentPageState.radioId === 'rad2') {
+        state.nextPage = 'page-three'
+    }
 }
 
 function _onSumbitActivationKey(e) {
