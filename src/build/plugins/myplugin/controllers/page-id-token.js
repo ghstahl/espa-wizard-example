@@ -79,12 +79,12 @@ function _registerRouteCallback(data) {
                 var json = idTokenResult.json;
                 _viewData.currentPageState.id_token = json.id_token;
             }
-
+            var backPage = _wizardPage.getBackPage(_viewData);
             ESPA.plugins.wizardEngine.setCurrentState({
-                backPage: _wizardPage.getBackPage(_viewData),
+                backPage: backPage,
                 currentPage: _wizardPage,
                 nextPage: "page-access-token",
-                back: false,
+                back: backPage ? true : false,
                 next: true,
                 cancel: true,
                 finish: false

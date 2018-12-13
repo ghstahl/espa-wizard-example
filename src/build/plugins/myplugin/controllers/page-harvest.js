@@ -5,7 +5,7 @@ import {
 import {
     getDummyJsonAsPromise
 } from '../services/dummy.js';
-
+import * as wizardappapi from "../services/wizardappapi-client-services.js";
 import * as promisesHelpers from "../helpers/promises.js"
 
 import tpl from '../views/page-harvest.html';
@@ -17,6 +17,29 @@ const _wizardPage = ESPA.plugins.factoryWizardPage({
     },
     onNext: function () {
         console.log("onNext");
+        var currentPageState = _viewData.currentPageState;
+        var wizardState = ESPA.plugins.state.get().wizardState;
+        var promise = new Promise(function (resolve, reject) {
+            // do a thing, possibly async, then…
+            wizardappapi
+                .fetchProductHarvest(currentPageState.harvestUrl)
+                .then((result) => {
+                    if (result.response.status != 200) {
+                        var el = document.getElementById('error');
+                        el.innerHTML = "harvest has been rejected!";
+                        resolve(false);
+                    } else {
+                        var json = result.json;
+                        wizardState.product_harvest = json;
+                        resolve(true);
+                    }
+                }).catch(function (error) {
+                    reject(false);
+                    console.log('There has been a problem with your fetch operation: ', error.message);
+                });
+        });
+        return promise;
+
         return promisesHelpers.valueAsPromise(true);
     },
     onBack: function () {
@@ -42,13 +65,31 @@ const _pageRecord = {
 
 const factory = _wizardPage.makeFactory(_pageRecord);
 
+const _harvestRecords = [{
+        id: "rad1",
+        value: "harvest/product-instance-one.json",
+        label: "Product One"
+    },
+    {
+        id: "rad2",
+        value: "harvest/product-instance-two.json",
+        label: "Product Two"
+    },
+    {
+        id: "rad3",
+        value: "harvest/product-instance-three.json",
+        label: "Product Three"
+    }
+];
+
 function _registerRouteCallback(data) {
     _viewData = data;
     _wizardPage.augmentViewData(_routeName, _viewData);
     var wizardState = _viewData.wizardState;
     var currentPageState = _viewData.currentPageState;
     if (currentPageState.radioId === undefined) {
-        currentPageState.radioId = "rad1";
+        currentPageState.radioId = _harvestRecords[0].id;
+        currentPageState.harvestUrl = _harvestRecords[0].value;
     }
     var state = ESPA.plugins.state.get();
     return Promise.all([
@@ -58,18 +99,13 @@ function _registerRouteCallback(data) {
         .then((results) => {
             serviceData = results[1];
             _viewData = Object.assign(_viewData, serviceData);
-            state.identity.forEach(function (entry) {
-                if (entry.name == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier") {
-                    _viewData.user = entry.value;
-                }
-                console.log(entry);
-            });
-            _viewData.entitlements = state.entitlements;
+            _viewData.harvestRecords = _harvestRecords;
+ 
 
             ESPA.plugins.wizardEngine.setCurrentState({
                 backPage: _wizardPage.getBackPage(_viewData),
                 currentPage: _wizardPage,
-                nextPage: "page-two",
+                nextPage: "page-id-token",
                 back: true,
                 next: true,
                 cancel: true,
@@ -91,12 +127,13 @@ function _displayView() {
     document.getElementById('wizard-content').innerHTML = ESPA.tmpl(_pageRecord.factoryScope.tpl, _viewData);
     document.getElementById('main-container').style.display = 'block';
 
-    ESPA.plugins.bindEvents({
-        'click #submitActivationKey': _onSumbitActivationKey,
-        'click #rad1': _radHandler,
-        'click #rad2': _radHandler,
-        'click #rad3': _radHandler,
+    var bindRecord = {};
+    _harvestRecords.forEach(function (entry) {
+        bindRecord[`click #${entry.id}`] = _radHandler;
+        console.log(entry);
     });
+
+    ESPA.plugins.bindEvents(bindRecord);
     document.getElementById(currentPageState.radioId).checked = true;
 
 
@@ -105,27 +142,9 @@ function _displayView() {
 function _radHandler(e) {
     var currentPageState = _viewData.currentPageState;
     currentPageState.radioId = e.srcElement.id;
-    var state = ESPA.plugins.wizardEngine.getCurrentState();
-    if (currentPageState.radioId === 'rad1') {
-        state.nextPage = 'page-two'
-    }
-    if (currentPageState.radioId === 'rad2') {
-        state.nextPage = 'page-three'
-    }
+    currentPageState.harvestUrl = e.srcElement.value;
 }
-
-function _onSumbitActivationKey(e) {
-    e.preventDefault();
-    const today = new SimpleDate(2000, 2, 28);
-    today.addDays(1);
-    var state = ESPA.plugins.state.get();
-    var dd = document.getElementById('activationKey');
-    state.activationKey = dd.value;
-    dd = document.getElementById('activationKeyEcho');
-    dd.value = state.activationKey;
-}
-
-
+ 
 export {
     factory,
     _registerRouteCallback

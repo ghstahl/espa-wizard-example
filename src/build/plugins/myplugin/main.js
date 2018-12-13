@@ -1,4 +1,3 @@
-
 import {
     factory as factoryPageOne
 } from './controllers/page-one.js';
@@ -14,9 +13,12 @@ import {
 import {
     factory as factoryPageIdToken
 } from './controllers/page-id-token.js';
-
+import {
+    factory as factoryPageHarvest
+} from './controllers/page-harvest.js';
 factoryPageOne();
 factoryPagetwo();
 factoryPageThree();
 factoryPageAccessToken();
 factoryPageIdToken();
+factoryPageHarvest();

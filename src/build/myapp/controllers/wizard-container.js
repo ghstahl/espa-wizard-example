@@ -107,7 +107,7 @@ function _displayView() {
         finish: false
     });
     
-    ESPA.navigate('page-id-token', {
+    ESPA.navigate('page-harvest', {
         directive: ESPA.plugins.wizardEngine.navigationDirective.Next,
         prevPage: null,
         wizardState: state.wizardState

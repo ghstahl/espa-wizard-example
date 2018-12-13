@@ -61,6 +61,11 @@ export function fetchIdentity(access_token) {
         },
     })
 }
+export function fetchProductHarvest(partialUrl) {
+    // do a thing, possibly async, then…
+    var url = `https://wizardappapi.azurewebsites.net/api/RemoteJsonFile/open?file=${partialUrl}`;
+    return ESPA.plugins.fetchService.fetch(url);
+}
 export function fetchEntitlements(access_token) {
     // do a thing, possibly async, then…
     return ESPA.plugins.fetchService.fetch('https://wizardappapi.azurewebsites.net/api/RemoteJsonFile/closed?file=entitlements.json', {

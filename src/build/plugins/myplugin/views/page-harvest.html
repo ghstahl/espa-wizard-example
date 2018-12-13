@@ -3,11 +3,21 @@
         Harvestor
     </h1>
     <p>
-        <form>
-            <input id="rad1" type="radio" name="page" value="prod-one"> Produce One<br>
-            <input id="rad2" type="radio" name="page" value="prod-two"> Produce Two<br>
-            <input id="rad3" type="radio" name="page" value="prod-three"> Produce Three<br>
+        <form id="my-harvest-form">
+            <% for ( var i = 0; i < harvestRecords.length; i++ ) { 
+                var harvestRecord = harvestRecords[i];%>
+            <input id="<%= harvestRecord.id %>" 
+            type="radio" 
+            name="page" 
+            value="<%= harvestRecord.value %>">
+            <%= harvestRecord.label %><br>
+ 
+            <% } %>
+
+
         </form>
+
+
     </p>
 
     </p>
