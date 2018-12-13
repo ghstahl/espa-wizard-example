@@ -101,12 +101,12 @@ function _registerRouteCallback(data) {
             _viewData = Object.assign(_viewData, serviceData);
             _viewData.harvestRecords = _harvestRecords;
  
-
+            var backPage = _wizardPage.getBackPage(_viewData);
             ESPA.plugins.wizardEngine.setCurrentState({
-                backPage: _wizardPage.getBackPage(_viewData),
+                backPage: backPage,
                 currentPage: _wizardPage,
                 nextPage: "page-id-token",
-                back: true,
+                back: backPage?true:false,
                 next: true,
                 cancel: true,
                 finish: false
