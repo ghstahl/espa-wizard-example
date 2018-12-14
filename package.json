@@ -89,7 +89,9 @@
     "less-monitor": "node scripts/less-monitor"
   },
   "jspm": {
-    "dependencies": {},
+    "dependencies": {
+      "json": "github:systemjs/plugin-json@^0.3.0"
+    },
     "devDependencies": {
       "babel-runtime": "npm:babel-runtime@^5.8.24",
       "core-js": "npm:core-js@^1.1.4",
@@ -120,4 +122,4 @@
   "dependencies": {
     "espa": "git+https://github.com/phongnlu/espa.git"
   }
-}
+}

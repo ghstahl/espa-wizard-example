@@ -43,7 +43,7 @@ SystemJS.config({
     "*.html": {
       "loader": "text"
     }
-  }
+  }  
 });
 
 SystemJS.config({

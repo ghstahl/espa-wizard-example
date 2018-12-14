@@ -6,7 +6,7 @@ import {
 import tpl from '../views/wizard-container.html';
 import tplBar from '../views/wizard-button-bar.html';
 
-import 'src/build/plugins/myplugin/main.js';
+import plugins from '../plugins.json!';
 
 const wizardListener = ESPA.plugins.factoryWizardListener({
     onStateChange: function (state) {
@@ -107,11 +107,17 @@ function _displayView() {
         finish: false
     });
     
-    ESPA.navigate('page-harvest', {
-        directive: ESPA.plugins.wizardEngine.navigationDirective.Next,
-        prevPage: null,
-        wizardState: state.wizardState
-    });
+    //load myplugin and continue with plugin flow
+    document.getElementById('loader').style.display = 'block';
+    ESPA.plugins.load(plugins['myplugin'])
+    .then(function() {
+        ESPA.navigate('page-harvest', {
+            directive: ESPA.plugins.wizardEngine.navigationDirective.Next,
+            prevPage: null,
+            wizardState: state.wizardState
+        });
+        document.getElementById('loader').style.display = 'none';
+    });    
 }
 
 function _onBackWizard(e) {

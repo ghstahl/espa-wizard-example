@@ -30,3 +30,17 @@ window.ESPA.plugins.state = {
     get: get,
     set: set
 }
+window.ESPA.plugins.load = function(url) {
+    if (!url) {
+        throw new Error('plugin url is missing');
+    }
+    if (window.ESPA.plugins.env === 'dev') {
+        const msg = 'dev env detected. Bypass loading plugin...';
+        ESPA.logger.debug(msg);
+        return Promise.resolve(msg);
+    } else {
+        ESPA.logger.debug('Start loading plugin url: ' + url);
+        return ESPA.loadResource.js(url);
+    }
+}
+window.ESPA.plugins.env = 'prod';

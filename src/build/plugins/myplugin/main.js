@@ -16,9 +16,14 @@ import {
 import {
     factory as factoryPageHarvest
 } from './controllers/page-harvest.js';
+
 factoryPageOne();
 factoryPagetwo();
 factoryPageThree();
 factoryPageAccessToken();
 factoryPageIdToken();
 factoryPageHarvest();
+
+//Make sure to set proper env for your main
+ESPA.plugins = ESPA.plugins || {};
+ESPA.plugins.env = 'dev';

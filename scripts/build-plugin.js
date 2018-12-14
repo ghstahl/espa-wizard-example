@@ -18,8 +18,7 @@ let cmd = require('node-cmd');
 
 function build() {
     cmd.get(
-        //`jspm build src/build/${product}/main.js dist/espa/${product}/${releaseJson.version}/main.js && jspm build src/build/${product}/main.js dist/espa/${product}/${releaseJson.version}/main.min.js --minify`,
-        `jspm build src/build/plugins/${plugin}/main.js --dev dist/espa/plugins/${plugin}/${releaseJson.version}/main.js`,
+        `jspm build src/build/plugins/${plugin}/main.js --dev dist/espa/plugins/${plugin}/${releaseJson.version}/main.js && jspm build src/build/plugins/${plugin}/main.js dist/espa/plugins/${plugin}/${releaseJson.version}/main.min.js --dev --minify`,
         function(err, data, stderr) {
             if (err) {
                 console.error('ERROR: ', err);
