@@ -67,21 +67,21 @@ function _registerRouteCallback(data) {
     _viewData = data || {};
     var state = ESPA.plugins.state.get();
     return Promise.all([
-        ESPA.loadResource.css(getCss())
-    ])
-    .then((results) => {
-        //serviceData = results[1];
-        _viewData = Object.assign(_viewData, serviceData);
-        state.wizardState = {}; // initialize wizardState.
+            ESPA.loadResource.css(getCss())
+        ])
+        .then((results) => {
+            //serviceData = results[1];
+            _viewData = Object.assign(_viewData, serviceData);
+            state.wizardState = {}; // initialize wizardState.
 
-        _displayView();
-    })
-    .catch(e => {
-        ESPA.logger.error(e);
-        return Promise.reject({
-            error: '_registerRouteCallback promise chain terminated'
+            _displayView();
+        })
+        .catch(e => {
+            ESPA.logger.error(e);
+            return Promise.reject({
+                error: '_registerRouteCallback promise chain terminated'
+            });
         });
-    });
 }
 
 function _displayView() {
@@ -106,18 +106,18 @@ function _displayView() {
         cancel: true,
         finish: false
     });
-    
+
     //load myplugin and continue with plugin flow
     document.getElementById('loader').style.display = 'block';
-    ESPA.plugins.load(plugins['myplugin'])
-    .then(function() {
-        ESPA.navigate('page-harvest', {
-            directive: ESPA.plugins.wizardEngine.navigationDirective.Next,
-            prevPage: null,
-            wizardState: state.wizardState
+    ESPA.plugins.load(plugins['harvester'])
+        .then(function () {
+            ESPA.navigate('page-harvest', {
+                directive: ESPA.plugins.wizardEngine.navigationDirective.Next,
+                prevPage: null,
+                wizardState: state.wizardState
+            });
+            document.getElementById('loader').style.display = 'none';
         });
-        document.getElementById('loader').style.display = 'none';
-    });    
 }
 
 function _onBackWizard(e) {

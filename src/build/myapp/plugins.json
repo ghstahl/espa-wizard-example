@@ -1,3 +1,3 @@
 {
-    "myplugin": "http://localhost:8888/dist/espa/plugins/myplugin/1.0.0/main.min.js"
+    "harvester": "http://localhost:8888/dist/espa/plugins/harvester/1.0.0/main.js"
 }

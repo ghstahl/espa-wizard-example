@@ -1,0 +1,15 @@
+<div class="container">
+    <h1 class="display-3">
+        <%= user %>
+    </h1>
+ 
+    <ul id="my-list">
+        <% for ( var i = 0; i < entitlements.length; i++ ) { 
+                var entitlement = entitlements[i];%>
+        <li>
+            <%= entitlement.name %>
+        </li>
+
+        <% } %>
+    </ul>
+</div>
