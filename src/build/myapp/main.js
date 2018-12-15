@@ -9,6 +9,7 @@ import {
 import {
     registerRoutes
 } from './services/routeRegistration.js';
+import './services/plugin-registration.js';
 
 ESPA.store.set('app/context/name', 'myapp');
 if (!ESPA.store.get('app/context/mode')) {

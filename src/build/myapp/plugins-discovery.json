@@ -1,0 +1,14 @@
+{
+    "myplugin": {
+        "dev": "http://localhost:8888/src/build/myapp/mock/myplugin-discovery.json",
+        "prod": "https://github.com/ghstahl/WizardAppApi-RemoteData/blob/master/data/harvest/product-instance-one.json"
+    },
+    "harvester": {
+        "dev": "http://localhost:8888/src/build/myapp/mock/harvester-discovery.json",
+        "prod": "https://github.com/ghstahl/WizardAppApi-RemoteData/blob/master/data/harvest/product-instance-one.json"
+    },
+    "forest": {
+        "dev": "https://wizardappapi.azurewebsites.net/api/RemoteJsonFile/open?file=harvest/product-instance-one.json",
+        "prod": "https://github.com/ghstahl/WizardAppApi-RemoteData/blob/master/data/forest/product-instance-one.json"
+    }
+}

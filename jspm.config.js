@@ -1,3 +1,10 @@
+//PLUGIN AUTHOR: Add your plugin folder here so that build script can pick it up
+var plugins = [
+  'myplugin',
+  'forest',
+  'harvester'
+];
+
 SystemJS.config({
   paths: {
     "github:": "jspm_packages/github/",
@@ -46,6 +53,17 @@ SystemJS.config({
   }  
 });
 
+var pluginPackages = {};
+plugins.forEach(function(plugin) {
+  pluginPackages[`src/build/plugins/${plugin}`] = {      
+    "map": {
+      "./main.js": {
+        "production": "plugin.build.bypass.config.js"
+      }
+    }
+  }
+});
+
 SystemJS.config({
   packageConfigPaths: [
     "npm:@*/*.json",
@@ -56,13 +74,5 @@ SystemJS.config({
     "assert": "npm:jspm-nodelibs-assert@0.2.1",
     "process": "npm:jspm-nodelibs-process@0.2.1"
   },  
-  packages: {
-    "src/build/plugins/myplugin": {      
-      "map": {
-        "./main.js": {
-          "production": "./main.prod.js"
-        }
-      }
-    }
-  }
+  packages: pluginPackages
 });

@@ -16,44 +16,20 @@ const _wizardPage = ESPA.plugins.factoryWizardPage({
         console.log("onNext");
         var currentPageState = _viewData.currentPageState;
         var wizardState = ESPA.plugins.state.get().wizardState;
-        var promise = new Promise(function (resolve, reject) {
-            // do a thing, possibly async, then…
-            wizardappapi
-                .fetchProductHarvest(currentPageState.harvestUrl)
-                .then((result) => {
-                    if (result.response.status != 200) {
-                        var el = document.getElementById('error');
-                        el.innerHTML = "harvest has been rejected!";
-                        resolve(false);
-                    } else {
-                        var json = result.json;
-                        wizardState.product_harvest = json;
-                        return json;
-                    }
-                })
-                .then((productRecord) => {
-                    var url = productRecord['wizard-package-url-dev'];
-                    url = 'http://localhost:8888/dist/espa/plugins/forest/1.0.0/main.js';
-                    var entryPage = productRecord['entry-page'];
-                    entryPage = 'page-forest';
-                    ESPA.plugins.load(url)
-                        .then(function () {
-                            ESPA.navigate(entryPage, {
-                                directive: ESPA.plugins.wizardEngine.navigationDirective.Next,
-                                prevPage: 'page-harvester',
-                                wizardState: wizardState
-                            });
-                            document.getElementById('loader').style.display = 'none';
-                        });
-                    resolve(true)
-                })
-                .catch(function (error) {
-                    reject(false);
-                    console.log('There has been a problem with your fetch operation: ', error.message);
-                });
+        //load forest and continue with plugin flow
+        document.getElementById('loader').style.display = 'block';    
+        return ESPA.plugins.load('forest')
+        .then(function(data) {        
+            ESPA.navigate(data.json['entry-page'], {
+                directive: ESPA.plugins.wizardEngine.navigationDirective.Next,
+                prevPage: 'page-harvester',
+                wizardState: wizardState
+            });
+            document.getElementById('loader').style.display = 'none';
+        })
+        .catch(function(e) {
+            ESPA.logger.error(e);        
         });
-        return promise;
-
     },
     onBack: function () {
         console.log("onBack");
