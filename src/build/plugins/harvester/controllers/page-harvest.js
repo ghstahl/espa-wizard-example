@@ -17,19 +17,17 @@ const _wizardPage = ESPA.plugins.factoryWizardPage({
         var currentPageState = _viewData.currentPageState;
         var wizardState = ESPA.plugins.state.get().wizardState;
         //load forest and continue with plugin flow
-        document.getElementById('loader').style.display = 'block';    
+        document.getElementById('loader').style.display = 'block';
         return ESPA.plugins.load('forest')
-        .then(function(data) {        
-            ESPA.navigate(data.json['entry-page'], {
-                directive: ESPA.plugins.wizardEngine.navigationDirective.Next,
-                prevPage: 'page-harvester',
-                wizardState: wizardState
+            .then(function (data) {
+                var currentState = ESPA.plugins.wizardEngine.getCurrentState();
+                currentState.nextPage = data.json['entry-page'];
+                ESPA.plugins.wizardEngine.setCurrentState(currentState);
+                return true;
+            })
+            .catch(function (e) {
+                ESPA.logger.error(e);
             });
-            document.getElementById('loader').style.display = 'none';
-        })
-        .catch(function(e) {
-            ESPA.logger.error(e);        
-        });
     },
     onBack: function () {
         console.log("onBack");
