@@ -2,7 +2,8 @@
 var plugins = [
   'myplugin',
   'forest',
-  'harvester'
+  'harvester',
+  'fileLoader'
 ];
 
 SystemJS.config({
@@ -50,12 +51,12 @@ SystemJS.config({
     "*.html": {
       "loader": "text"
     }
-  }  
+  }
 });
 
 var pluginPackages = {};
-plugins.forEach(function(plugin) {
-  pluginPackages[`src/build/plugins/${plugin}`] = {      
+plugins.forEach(function (plugin) {
+  pluginPackages[`src/build/plugins/${plugin}`] = {
     "map": {
       "./main.js": {
         "production": "plugin.build.bypass.config.js"
@@ -73,6 +74,6 @@ SystemJS.config({
   map: {
     "assert": "npm:jspm-nodelibs-assert@0.2.1",
     "process": "npm:jspm-nodelibs-process@0.2.1"
-  },  
+  },
   packages: pluginPackages
 });

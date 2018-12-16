@@ -1,0 +1,143 @@
+/**
+ * Drag and Upload 2.0
+ * A Remi A Olsen Production :D
+ * remi@remiolsen.info / https://remiolsen.info
+ * 
+ * This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License:
+ * https://creativecommons.org/licenses/by-nc/4.0/
+ */
+
+@import url("https://use.fontawesome.com/releases/v5.5.0/css/all.css");
+
+.dragAndUpload,
+.dragAndUpload * {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    outline: 0;
+}
+
+.dragAndUploadManual {
+    display: none;
+}
+
+.dragAndUpload {
+    color: rgb(100, 100, 100);
+    cursor: pointer;
+    display: block;
+    font: 0/1em "Helvetica Neue", "Segoe UI", sans-serif;
+    font-weight: 400;
+    height: 65px;
+    line-height: 16px;
+    margin: inherit;
+    position: relative;
+    text-align: left;
+    -moz-transition: all .2s;
+    -webkit-transition: all .2s;
+    transition: all .05s;
+    perspective: 1000px;
+    width: 200px;
+}
+
+.dragAndUploadText {
+    background: rgb(255, 255, 255);
+    border-radius: 9px;
+    box-shadow: rgba(0, 0, 0, .25) 2px 2px 5px;
+    display: inline-block;
+    font-size: 16px;
+    font-weight: bold;
+    height: 65px;
+    left: 45px;
+    padding: 16px 15px;
+    position: absolute;
+    text-align: center;
+    vertical-align: middle;
+    width: 155px;
+    z-index: 1;
+}
+
+.dragAndUploadTextSmall {
+    display: block;
+    font-size: 13px;
+    font-weight: normal;
+}
+
+.dragAndUpload .dragAndUploadIcon {
+    background: rgb(100, 100, 100);
+    border-radius: 9px 0 0 9px;
+    box-shadow: rgba(0, 0, 0, .25) 1px 1px 4px;
+    color: rgb(255, 255, 255);
+    display: inline-block;
+    height: 65px;
+    position: absolute;
+    vertical-align: middle;
+    width: 59px;
+    z-index: 0;
+}
+
+.dragAndUpload.dragAndUploadFailure .dragAndUploadIcon {
+    background: rgb(100, 0, 0);
+}
+
+.dragAndUpload .dragAndUploadIcon .fas {
+    display: block;
+    font-size: 22px;
+    position: absolute;
+    line-height: 65px;
+    text-align: center;
+    transition: .2s all;
+    width: 49px;
+}
+
+.dragAndUpload.dragAndUploadActive .dragAndUploadIcon .fas {
+    transform: rotate(180deg);
+}
+
+.dragAndUpload .dragAndUploadIcon .dragAndUploadIconUploading,
+.dragAndUpload .dragAndUploadIcon .dragAndUploadIconSuccess,
+.dragAndUpload .dragAndUploadIcon .dragAndUploadIconFailure {
+    display: none;
+}
+
+.dragAndUpload.dragAndUploadUploading .dragAndUploadIcon .dragAndUploadIconNeutral {
+    display: none;
+}
+
+.dragAndUpload.dragAndUploadUploading .dragAndUploadIcon .dragAndUploadIconUploading {
+    display: block;
+}
+
+.dragAndUpload.dragAndUploadSuccess .dragAndUploadIcon .dragAndUploadIconSuccess {
+    display: block;
+}
+
+.dragAndUpload.dragAndUploadFailure .dragAndUploadIcon .dragAndUploadIconFailure {
+    display: block;
+}
+
+.dragAndUpload.dragAndUploadSuccess .dragAndUploadIcon .dragAndUploadIconNeutral,
+.dragAndUpload.dragAndUploadFailure .dragAndUploadIcon .dragAndUploadIconNeutral {
+    display: none;
+}
+
+.dragAndUpload .dragAndUploadCounter {
+    bottom: -20px;
+    color: rgb(100, 100, 100);
+    display: none;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: bold;
+    line-height: 18px;
+    left: 0;
+    padding: 0 5px;
+    position: absolute;
+    text-align: center;
+    z-index: 2;
+    width: 100%;
+}
+
+.dragAndUpload.dragAndUploadUploading .dragAndUploadCounter,
+.dragAndUpload.dragAndUploadSuccess .dragAndUploadCounter,
+.dragAndUpload.dragAndUploadFailure .dragAndUploadCounter {
+    display: block;
+}

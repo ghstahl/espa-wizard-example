@@ -4,10 +4,14 @@ import {
 
 import * as wizardappapi from "../services/wizardappapi-client-services.js";
 import * as promisesHelpers from "../helpers/promises.js"
- 
- 
-import tpl from '../views/page-harvest.html';
-const _routeName = 'page-harvest';
+import {
+    setupDragAndUpload
+} from "../helpers/drag-n-upload-2.0.js";
+
+
+
+import tpl from '../views/page-fileLoader.html';
+const _routeName = 'page-fileLoader';
 
 const _wizardPage = ESPA.plugins.factoryWizardPage({
     getRouteName: function () {
@@ -16,11 +20,10 @@ const _wizardPage = ESPA.plugins.factoryWizardPage({
     onNext: function () {
         console.log("onNext");
         var currentPageState = _viewData.currentPageState;
-    
         var wizardState = ESPA.plugins.state.get().wizardState;
         //load forest and continue with plugin flow
         document.getElementById('loader').style.display = 'block';
-        return ESPA.plugins.load(currentPageState.pluginKey, ESPA.plugins.metaData)
+        return ESPA.plugins.load('forest')
             .then(function (data) {
                 var currentState = ESPA.plugins.wizardEngine.getCurrentState();
                 currentState.nextPage = data.json['entry-page'];
@@ -53,34 +56,19 @@ const _pageRecord = {
 
 const factory = _wizardPage.makeFactory(_pageRecord);
 
-const _harvestRecords = [{
-        id: "rad1",
-        value: "forest",
-        label: "Forest"
-    },
-    {
-        id: "rad2",
-        value: "fileLoader",
-        label: "File Loader"
-    } 
-];
 
 function _registerRouteCallback(data) {
     _viewData = data;
     _wizardPage.augmentViewData(_routeName, _viewData);
     var wizardState = _viewData.wizardState;
     var currentPageState = _viewData.currentPageState;
-    if (currentPageState.radioId === undefined) {
-        currentPageState.radioId = _harvestRecords[0].id;
-        currentPageState.pluginKey = _harvestRecords[0].value;
-    }
+
     var state = ESPA.plugins.state.get();
     return Promise.all([
             ESPA.loadResource.css(getCss())
         ])
         .then((results) => {
             _viewData = Object.assign(_viewData, {});
-            _viewData.harvestRecords = _harvestRecords;
 
             var backPage = _wizardPage.getBackPage(_viewData);
             ESPA.plugins.wizardEngine.setCurrentState({
@@ -88,7 +76,7 @@ function _registerRouteCallback(data) {
                 currentPage: _wizardPage,
                 nextPage: null,
                 back: backPage ? true : false,
-                next: true,
+                next: false,
                 cancel: true,
                 finish: false
             });
@@ -102,6 +90,21 @@ function _registerRouteCallback(data) {
         });
 }
 
+function _ProcessFiles(files) {
+    return new Promise(function (resolve, reject) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            var text = reader.result;
+            var currentState = ESPA.plugins.wizardEngine.getCurrentState();
+            currentState.finish = true;
+            ESPA.plugins.wizardEngine.setCurrentState(currentState);
+
+            resolve(true);
+        }
+        reader.readAsText(files[0]);
+    });
+}
+
 function _displayView() {
     var currentPageState = _viewData.currentPageState;
     document.getElementById('loader').style.display = 'none';
@@ -109,21 +112,13 @@ function _displayView() {
     document.getElementById('main-container').style.display = 'block';
 
     var bindRecord = {};
-    _harvestRecords.forEach(function (entry) {
-        bindRecord[`click #${entry.id}`] = _radHandler;
-        console.log(entry);
+
+    setupDragAndUpload({
+        ProcessFiles: _ProcessFiles
     });
- 
+
+
     ESPA.plugins.bindEvents(bindRecord);
-    document.getElementById(currentPageState.radioId).checked = true;
-
-
-}
- 
-function _radHandler(e) {
-    var currentPageState = _viewData.currentPageState;
-    currentPageState.radioId = e.srcElement.id;
-    currentPageState.pluginKey = e.srcElement.value;
 }
 
 export {

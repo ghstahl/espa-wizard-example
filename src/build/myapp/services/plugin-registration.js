@@ -2,3 +2,4 @@
 import 'src/build/plugins/myplugin/main.js';
 import 'src/build/plugins/harvester/main.js';
 import 'src/build/plugins/forest/main.js';
+import 'src/build/plugins/fileLoader/main.js';

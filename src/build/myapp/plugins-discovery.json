@@ -10,5 +10,9 @@
     "forest": {
         "dev": "https://wizardappapi.azurewebsites.net/api/RemoteJsonFile/open?file=harvest/product-instance-one.json",
         "prod": "https://github.com/ghstahl/WizardAppApi-RemoteData/blob/master/data/forest/product-instance-one.json"
+    },
+    "fileLoader": {
+        "dev": "http://localhost:8888/src/build/myapp/mock/fileLoader-discovery.json",
+        "prod": "https://github.com/ghstahl/WizardAppApi-RemoteData/blob/master/data/forest/product-instance-one.json"
     }
 }

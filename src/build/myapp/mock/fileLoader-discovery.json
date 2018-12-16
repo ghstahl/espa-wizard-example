@@ -1,0 +1,4 @@
+{
+    "wizard-package-url": "http://localhost:8888/dist/espa/plugins/fileLoader/1.0.0/main.js",
+    "entry-page": "page-fileLoader"
+}

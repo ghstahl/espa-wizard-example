@@ -106,19 +106,19 @@ function _displayView() {
     });
 
     //load harvester and continue with plugin flow
-    document.getElementById('loader').style.display = 'block';    
-    ESPA.plugins.load('harvester')
-    .then(function(data) {        
-        ESPA.navigate(data.json['entry-page'], {
-            directive: ESPA.plugins.wizardEngine.navigationDirective.Next,
-            prevPage: null,
-            wizardState: state.wizardState
+    document.getElementById('loader').style.display = 'block';
+    ESPA.plugins.load('harvester', ESPA.plugins.metaData)
+        .then(function (data) {
+            ESPA.navigate(data.json['entry-page'], {
+                directive: ESPA.plugins.wizardEngine.navigationDirective.Next,
+                prevPage: null,
+                wizardState: state.wizardState
+            });
+            document.getElementById('loader').style.display = 'none';
+        })
+        .catch(function (e) {
+            ESPA.logger.error(e);
         });
-        document.getElementById('loader').style.display = 'none';
-    })
-    .catch(function(e) {
-        ESPA.logger.error(e);        
-    });
 }
 
 function _onBackWizard(e) {
