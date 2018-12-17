@@ -33,7 +33,10 @@ function build() {
 
 function copyExtraResources() {
     try {
-        fs.copySync(`src`, `dist/espa/${product}/${releaseJson.version}/src`);                
+        //copy polyfill
+        fs.copySync(`src/build/${product}/polyfill`, `dist/espa/${product}/${releaseJson.version}/polyfill`);     
+        //copy css
+        fs.copySync(`src/build/${product}/styles`, `dist/espa/${product}/${releaseJson.version}/styles`);                
         console.log('INFO: copyExtraResources success');
       } catch (err) {
         console.error('ERROR: ', err);

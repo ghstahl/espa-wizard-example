@@ -6,6 +6,12 @@ function getCurrentContext() {
     return "fileLoader";
 }
 
-export function getCss() {    
-    return `${getSpaHost()}src/build/plugins/${getCurrentContext()}/styles/${getCurrentContext()}.css`;
+export function getCss() {
+    let url = '';
+    if (ESPA.plugins.env !== 'prod') {
+        url = `${getSpaHost()}src/build/plugins/${getCurrentContext()}/styles/${getCurrentContext()}.css`;
+    } else {
+        url = `${getSpaHost()}plugins/styles/${getCurrentContext()}.css`;
+    }
+    return url;
 }

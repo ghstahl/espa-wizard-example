@@ -26,8 +26,18 @@ function build() {
                 fs.writeFileSync(`dist/espa/plugins/${plugin}/release.json`, JSON.stringify(releaseJson, null, 4) , 'utf-8');
             }
             console.log('RESULT: ', data);
+            copyExtraResources();
         }
     );
+}
+
+function copyExtraResources() {
+    try {        
+        fs.copySync(`src/build/plugins/${plugin}/styles`, `dist/espa/plugins/${plugin}/${releaseJson.version}/styles`);                
+        console.log('INFO: copyExtraResources success');
+      } catch (err) {
+        console.error('ERROR: ', err);
+      }
 }
 
 build();

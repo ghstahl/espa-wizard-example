@@ -11,8 +11,14 @@ function getCurrentContext() {
     return ESPA.store.get('app/context/name');
 }
 
-export function getCss() {    
-    return `${getSpaHost()}src/build/${getCurrentContext()}/styles/${getCurrentContext()}.css`;
+export function getCss() {
+    let url = '';
+    if (ESPA.plugins.env !== 'prod') {
+        url = `${getSpaHost()}src/build/${getCurrentContext()}/styles/${getCurrentContext()}.css`;
+    } else {
+        url = `${getSpaHost()}styles/${getCurrentContext()}.css`;
+    }
+    return url;
 }
 
 
@@ -78,7 +84,13 @@ export function polyfill(polyfillArr, callback) {
             _checkPolyfillReady(polyfillArr, polyfillArrReady, callback);
         } else {
             ESPA.logger.debug(`utils.polyfill, loading: ${ns}`);
-            ESPA.loadResource.jsCallback(`${getSpaHost()}src/build/${getCurrentContext()}/polyfill/${ns.toLowerCase()}.js`, () => {
+            let url = '';
+            if (ESPA.plugins.env !== 'prod') {
+                url = `${getSpaHost()}src/build/${getCurrentContext()}/polyfill/${ns.toLowerCase()}.js`;
+            } else {
+                url = `${getSpaHost()}polyfill/${ns.toLowerCase()}.js`;
+            }
+            ESPA.loadResource.jsCallback(url, () => {
                 polyfillArrReady.push(ns);
                 _checkPolyfillReady(polyfillArr, polyfillArrReady, callback);
             });
