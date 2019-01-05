@@ -45,11 +45,14 @@ SystemJS.config({
   map: {
     "babel": "npm:babel-core@5.8.38",
     "text": "github:systemjs/plugin-text@0.0.11",
-    "json": "github:systemjs/plugin-json@0.3.0"
+    "json": "node_modules/systemjs-plugin-json/json.js"
   },
   meta: {
     "*.html": {
       "loader": "text"
+    },
+    "*.json": {
+      "loader": "json"
     }
   }
 });

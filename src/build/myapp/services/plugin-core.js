@@ -18,7 +18,7 @@ import {
     get,
     set
 } from '../services/state-machine.js';
-import pluginsMetadata from '../plugins-discovery.json!';
+import pluginsMetadata from '../plugins-discovery.json';
 
 window.ESPA.plugins = window.ESPA.plugins || {};
 window.ESPA.plugins.wizardEngine = wizardEngine;

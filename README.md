@@ -21,6 +21,22 @@ Example of a typical ESPA webapp
 ```
 - Go to http://localhost:8888/src/build/myapp
 
+## Unit test, Code coverage
+
+- To test app
+
+```cmd
+> npm run test {app} (from root directory)
+> Ex: npm run test myapp 
+```
+
+- To test plugin
+
+```cmd
+> npm run test-plugin {plugin} (from root directory)
+> Ex: npm run test-plugin forest 
+```
+
 ## Build
 
 ```cmd

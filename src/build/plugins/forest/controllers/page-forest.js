@@ -107,7 +107,7 @@ function _registerRouteCallback(data) {
 function _displayView() {
     var currentPageState = _viewData.currentPageState;
     document.getElementById('loader').style.display = 'none';
-    document.getElementById('wizard-content').innerHTML = ESPA.tmpl(_pageRecord.factoryScope.tpl, _viewData);
+    document.getElementById('wizard-content').innerHTML = ESPA.tmpl(_pageRecord.tpl, _viewData);
     document.getElementById('main-container').style.display = 'block';
 
     var bindRecord = {};

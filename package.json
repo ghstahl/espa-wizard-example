@@ -71,6 +71,7 @@
     "sinon": "^4.4.6",
     "sinon-chai": "^3.0.0",
     "stringify": "^5.2.0",
+    "systemjs-plugin-json": "^0.3.0",
     "watchify": "^3.9.0",
     "whatwg-fetch": "^2.0.4"
   },
@@ -83,14 +84,14 @@
     "build-less": "node scripts/build-less",
     "build-rollup": "node scripts/buildRollup",
     "test": "node scripts/test",
+    "test-plugin": "node scripts/test-plugin",
     "patch": "apply-patch patches/node_modules/istanbul/lib/report/html.js.patch",
     "eslint": "node scripts/eslint",
     "lint-build": "npm-run-all -s \"eslint --product {1} --platform {2}\" \"build --product {1} --platform {2}\" --",
     "less-monitor": "node scripts/less-monitor"
   },
   "jspm": {
-    "dependencies": {
-      "json": "github:systemjs/plugin-json@^0.3.0"
+    "dependencies": {      
     },
     "devDependencies": {
       "babel-runtime": "npm:babel-runtime@^5.8.24",

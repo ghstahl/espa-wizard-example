@@ -25,10 +25,10 @@ if (ESPA.store.get('app/context/mode') === 'non-test') {
         'Object.values',
         'fetch',
         'Promise'
-    ], _main);
+    ], main);
 }
 
-function _main() {
+export function main() {
     ESPA.plugins.state.set({}); // make sure that something is in the store for state.
     var state = ESPA.plugins.state.get();
     registerApiHosts();
